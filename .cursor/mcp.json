@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "droppykit": {
+      "command": "/Users/maksim/desktop/droppykit/Scripts/droppykit",
+      "args": [
+        "mcp",
+        "--package",
+        "/Users/maksim/Desktop/freelance-tracker"
+      ],
+      "env": {
+        "DEVELOPER_DIR": "/Applications/Xcode.app/Contents/Developer"
+      }
+    }
+  }
+}
