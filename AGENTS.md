@@ -204,43 +204,101 @@ opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
   money under the clock; at the bottom the last five sessions as bars (`SessionBars`, the current
   one bright, growing as it ticks), the session name and the rate) → `projects` / `sessions` (one
   row of 176pt cards that scrolls sideways inside `FadingScroll`, which fades the edge with more
-  behind it; a card is the name (in the project's colour on a project card), the time large, the
-  money and a caption; tap picks, hover shows analytics, edit (projects) and delete; the plus is a
-  glass disc) → `newProject` / `editProject` (one
-  `ProjectForm`: rate slider in steps of 5, currency tabs in a fading scrolling line, nine colour
-  swatches, Create or Save; `editingProjectID` says which project) → `analytics`
+  behind it; a project card (`ProjectCard`) is glass tinted in the project colour: icon and name
+  in the colour, the first figure large, then "Earned" or "Time spent" and "Rate" with their
+  values; a session card (`ListCard`) is the name, the time large, the money and the day; tap
+  picks, hover shows analytics, edit (projects) and delete; the plus is a glass disc) → `newProject` / `editProject` (the project flow, below) → `analytics`
   (`TrackerAnalytics.swift`: project tabs in the nav row, then three pages with dots under them:
   the totals centred, the 14-day time chart, the 14-day money chart; the corner disc writes the
   CSV of the chosen project to `~/Downloads` and reveals it). While a session runs the menu's Timer
-  disc is tinted glass in the project's colour with the clock under it. No text
-  field on the shelf: names are `Project N` / `Session N`, renamed in
-  Settings. A menu would drop below the shelf and close it, hence tabs, not a picker. The paired
-  composition is the timer at a smaller scale. Corner discs are `navHeight` (28pt).
+  disc is tinted glass in the project's colour with the clock under it. Sessions are named
+  `Session N` and renamed in Settings. A menu would drop below the shelf and close it, hence
+  carousels and tabs, not pickers. The paired composition is the timer at a smaller scale. Corner
+  discs are `navHeight` (28pt).
+- **Project flow** (`ProjectFlow.swift`). `startNewProject()` or `edit(id)` fills
+  `droplet.draft` (`ProjectDraft`) and shows `.newProject` / `.editProject`; every step is the same
+  174pt: nav row, an 80pt body, a button row with "or Press ⏎". Steps: `.name` → `.look` → `.rate`
+  → `.currency` (opened from the rate step's top-right pill; `pendingCurrency` holds the choice,
+  Confirm applies, Back discards). Back walks the steps and leaves from the first. Steps swap on
+  `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
+  the project colour over a stronger fill of the same colour.
+- **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
+  window, and a droplet cannot make it so: `ShelfWidgetFocusPolicy.keyboardFocusable` is recorded
+  but has no effect in current hosts (see its doc comment), and while the panel is not key it
+  reports `canBecomeKey == false`, so `makeKey()` does nothing. When Droppy has made the panel key
+  for its own reasons, the field takes the input at once. Info-level droplet logs never reach the
+  unified log; use `host.log.error` for a temporary diagnostic and remove it after. SwiftUI's
+  `@FocusState` did not make the field first responder inside the notch panel (the Playground
+  logged `noResponder(keyDown:)` beeps while the panel was key), so the flow uses AppKit directly. `FlowTextField` wraps an `NSTextField` (centred text and
+  placeholder, Return submits, Escape goes back through the delegate); `FlowKeyReceiver` is a
+  zero-hit-test `NSView` that takes first responder on the other steps and turns Return, Escape and
+  the arrows into callbacks. Both claim first responder when their window is or becomes key. While
+  the flow is up the shelf is held open (`setHoldsOpen`) and the descriptor's `focusPolicy` is
+  `.keyboardFocusable`, `.none` otherwise.
+- **Wheels.** `InfiniteWheel` + `WheelEngine` draw the icon and currency pickers: an endless ring
+  (virtual indices wrap), the centred item chosen, scale and opacity falling with distance, a
+  96pt fade at each edge. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
+  that only consumes events while the pointer is over the wheel (snaps 90 ms after the last event,
+  a haptic tick per item), drag with momentum from the predicted end, click on any item, arrows.
+  The monitor is removed on disappear.
+- **Icon.** `ProjectIcon` (16 SF Symbols, all in macOS 14) is stored on the project; a project
+  saved before it existed, or one with an unknown value, decodes as the briefcase. It shows on the
+  timer badge (solo and paired), on project cards and in the analytics tabs.
 - **Name.** The droplet is called Freelancy (`name` in droplet.json, the widget title, the
   activation log line). The id `freelance-tracker`, the Swift product `FreelanceTracker` and the
   file names stay: the id is the preferences namespace and the bundle folder.
-- **Deleting on the shelf.** A delete disc calls `askToDelete(.project/.session)`;
-  `pendingDeletion` makes the widget show `ConfirmDeleteScreen` in place of its screen (same
-  height, so the shelf stays put) with Cancel (glass) and Delete (red-tinted glass).
-  `confirmDeletion` does the removal. Settings deletes directly, as before.
+- **Confirmations on the shelf.** `droplet.ask(_:)` sets `pendingConfirmation`
+  (`.deleteProject`, `.deleteSession`, `.newSession`, `.switchProject`) and the widget shows
+  `ConfirmScreen` in
+  place of its screen, solo and paired (`compact`), at the same height. Cancel is plain glass;
+  Delete is red-tinted glass, Start / Create is `VividGlassButtonStyle` in the project colour. The
+  new-session question says whether a running session will be paused (or keeps running when
+  "Start new sessions running" is off). `confirmPending()` acts. After a new session,
+  `freshSessionID` is set for 2.4 s and `SessionNameLine` shows "✓ Session N started" in the
+  project colour on the timer and the paired timer. Picking another project from a card or the
+  paired list goes through `requestOpen`, which asks first while a session of a different
+  project runs; the running session keeps running. Both questions can be switched off in
+  Settings, Shelf ("Ask before starting a new session", "Ask before switching projects"; the
+  shelf buttons call `requestNewSession` and `requestOpen`, which read them).
+- **Settings pane.** A project row starts with `ProjectLookMenu`: a 28pt superellipse square in the project colour
+  with its icon, opening a menu of inline pickers for colour and icon. Deleting a project or a
+  session in Settings asks inline (`InlineDeleteConfirmation`: the question, Cancel, Delete) in
+  place of the row's controls; a session row also hides its day and length while it asks. The HUD toggle is "Show a strip on start and pause".
+- **Session rename.** The pencil on a session card calls `startRenamingSession`; `.renameSession`
+  shows `SessionRenameScreen` (same field, nav and "or Press ⏎" row as the project flow, Save in
+  the project colour), backed by `sessionRename`. It counts as a typing flow for the shelf hold.
+- **Card sizes.** Project cards are 112pt tall with 10pt between name, figure and the bottom row
+  and 12pt side padding; session cards stay 90pt with 14pt side padding; 12pt between cards. The
+  Projects screen is therefore taller than the timer and the Sessions screen. Hover controls sit
+  over the card and never move its content.
 - **Start new sessions running.** The `startsSessionsRunning` preference (default on). Off, a new
   session is created paused, nothing else is paused, and no HUD shows.
 - **Show me the money.** The `moneyFirst` preference (Settings, Shelf) swaps the two figures on
   the timer, the paired timer, the running menu item and every card: `droplet.ordered(time:money:)`
   hands them back in the chosen order. The notch wings do not swap.
 - **Paired.** `PairedView` switches on `screen`: `.projects` is a short list of projects to pick
-  from (dot, name, total time), anything else the timer. Timer, projects and sessions all come to
-  the same `widgetHeight` (132), and `makeWidgetView` sends a compact mount on any other screen
+  from (dot, name, total time) and `.sessions` the same list of the current project's sessions
+  (`PairedSessionsView`), both in a `VerticalFadingScroll`; anything else the timer, whose bottom
+  row is two 22pt glass capsules: the session (bars and name, a button that opens the sessions
+  list and grows under the pointer) and the rate. A pending confirmation replaces any of them. Timer and sessions come to the same `widgetHeight` (140), the
+  projects list to 162, and `makeWidgetView` sends a compact mount on any other screen
   back to the timer, so a grouped row never takes the height of a solo-only screen.
 - **Analytics.** The nav row is back disc, the project tabs (glass pills as tall as the discs,
   the chosen one tinted in its colour, in a `FadingScroll`), CSV disc. Under it `PagedScroll`:
   full-width pages with a 12pt gap snapping one at a time; the moment a page moves both edges fade
-  in (0.12 s) and, once it rests, linger a quarter second and ease away over 0.45 s. Dots under it. Figures use
+  in (0.12 s) and, once it rests, linger a quarter second and ease away over 0.45 s. Dots under it.
+  (16pt gap). Chart pages (`ChartPage`): the period and the total (16pt) on top; 14 capsule bars
+  6pt apart, never shorter than their width plus 4pt; an empty day is a dim circle as wide as a
+  bar; today's bar at full strength with a dot in the project colour under it, a weekday letter
+  under every bar. Hovering a bar dims the rest and puts that day's date and value in the header.
+  While the pages scroll, and for 220 ms after, `PagedScroll` sets `analyticsIsPaging` and the bars
+  ignore the pointer, so paging does not hover every bar it passes.
+  The pages are 112pt, 20pt under the tabs. Figures use
   `.contentTransition(.numericText())` and bars animate on their values, so switching project
   rolls everything to the new numbers. A project card's hover controls are analytics, edit,
   delete; analytics opens on that project through `analyticsProjectID`.
 - **Colour.** `ProjectColor` (nine cases) is stored on the project; a project saved before it
-  existed decodes as cyan. It paints the badge, the name on a project card, the Sessions title,
+  existed, or with an unknown value, decodes as cyan. It paints the badge, the name on a project card, the Sessions title,
   the analytics tab and earnings bars, and the clock in the leading notch wing.
 - **Analytics figures.** A session's time is booked to the day it was created on, so a session
   that runs past midnight stays on its first day. The CSV (`TrackerCSV.render`, one project, named
@@ -255,7 +313,8 @@ opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
   and blurs out while the new one rises in, on `DroppyAnimation.state`. Used for the notch
   wings and the timer. The clock is the project's colour in the notch; on the timer the clock is
   primary and the money tertiary, as in the sketch.
-- **Files.** `TrackerModel.swift` (currency table, colours, project, session, duration parsing),
+- **Files.** `TrackerModel.swift` (currency table, icons, colours, project, session, duration parsing),
+  `ProjectFlow.swift` (the create and edit flow, `CenterCarousel`),
   `FreelanceTrackerDroplet.swift` (lifecycle, store, screens, CSV export, live activity, HUD,
   descriptors), `TrackerWidget.swift` (every screen but analytics, the shared pieces, the paired
   view), `TrackerAnalytics.swift` (figures, CSV, the analytics screen), `RollingDigits.swift`,
@@ -269,6 +328,9 @@ opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
   to that case, and for `editProject` also set `editingProjectID`. Never sed every
   `screen = .x` line: `open`, `createProject`, `newSession` and `select` set `.timer` at the same
   indent, and rewriting those sends every action back to the menu.
+- **Tests.** `Tests/FreelanceTrackerTests` covers the clock strings and duration parsing, money
+  formatting, decoding projects saved by older versions, session durations and the CSV. Run
+  `swift test` with `DEVELOPER_DIR` set as below; the droplet build ignores the test target.
 - **Toolchain.** The SDK needs Swift 6.2 (Xcode 26+). `xcode-select` here points at Command
   Line Tools (Swift 6.0.3), so `.mcp.json` and `.cursor/mcp.json` pass
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`; export the same in a shell before

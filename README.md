@@ -12,20 +12,25 @@ runs.
 
 - **Timer.** The current session of the current project: the clock, the money
   under it, pause and resume at one hand, a fresh session at the other. The
-  project's name above the clock is a badge; tap it to switch projects.
-- **Projects and sessions.** Cards in a row that scrolls sideways. Tap one to
-  pick it, hover for analytics, edit and delete. A new project takes a rate
-  from a slider, a currency from a row of tabs and a colour from a palette.
+  project's badge above the clock switches projects; asking first while
+  another project's session runs.
+- **Projects and sessions.** Cards in a row that scrolls sideways. Project
+  cards are glass in the project's colour. Hover for analytics, edit, rename
+  and delete; a delete asks first, right on the shelf.
+- **New project.** Three short steps on the shelf: a name, an icon and a
+  colour from two wheels, then an hourly rate and its currency.
 - **Analytics.** One project at a time: the totals, two weeks of time and
-  money as bars, and a CSV of that project's sessions saved to Downloads.
+  money as bars (hover a bar for that day), and a CSV of that project's
+  sessions saved to Downloads.
 - **Notch.** While a session runs, the clock in the project's colour and the
   amount earned sit beside the notch and tick every second, only the changed
-  digit moving. A brief strip confirms a start or a pause.
-- **Settings.** Defaults for new projects, project and session names, rates
-  and lengths, whether a new session starts running, and whether the amount or
-  the clock gets the big digits.
+  digit moving. A brief strip can confirm a start or a pause.
+- **Settings.** Defaults for new projects, project names, colours, icons,
+  rates and currencies, session names and lengths, and the shelf's questions.
 
-Names are typed in Settings; the shelf never asks for a text field.
+Typing a name on the shelf needs Droppy to give the widget keyboard focus,
+which current Droppy builds do only some of the time; names can always be
+changed in Settings.
 
 ## Requirements
 
@@ -56,6 +61,7 @@ and needs Swift 6.2 (Xcode 26 or later).
 droppykit build      # the bundle
 droppykit validate   # the checks a submission runs
 droppykit run        # the harness window, one page per surface
+swift test           # the model, formatting and CSV tests
 ```
 
 `AGENTS.md` is the brief for coding agents; `.mcp.json` and `.cursor/mcp.json`
