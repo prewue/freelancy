@@ -223,10 +223,12 @@ opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
   `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
   the project colour over a stronger fill of the same colour.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
-  window, and a droplet cannot make it so: `ShelfWidgetFocusPolicy.keyboardFocusable` is recorded
-  but has no effect in current hosts (see its doc comment), and while the panel is not key it
-  reports `canBecomeKey == false`, so `makeKey()` does nothing. When Droppy has made the panel key
-  for its own reasons, the field takes the input at once. Info-level droplet logs never reach the
+  window, and only the host can make it so (DroppyKit 1.10.0, hence `minAPI` 1.10.0; hosts on
+  1.8.1, such as Playground 1.0.20, refuse the bundle). `FlowFocus.ensureKey` calls
+  `host.shelf.requestKeyboardFocus()` through `FlowFocus.requestKey` (set in `activate`, cleared in
+  `deactivate`) and never `makeKey()`; the request is refused unless the descriptor currently says
+  `.keyboardFocusable`, so the views retry on `FlowFocus.retryDelays` while the host re-reads the
+  descriptor. Once granted, the panel stays eligible while the widget is on the shelf. Info-level droplet logs never reach the
   unified log; use `host.log.error` for a temporary diagnostic and remove it after. SwiftUI's
   `@FocusState` did not make the field first responder inside the notch panel (the Playground
   logged `noResponder(keyDown:)` beeps while the panel was key), so the flow uses AppKit directly. `FlowTextField` wraps an `NSTextField` (centred text and
