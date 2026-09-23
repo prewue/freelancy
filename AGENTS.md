@@ -9,7 +9,7 @@ the notch, the shelf, the lock screen and the menu bar.
 
 - Droplet id: `freelance-tracker`. It is also `FreelanceTrackerDroplet.id` in Swift and `id` in `droplet.json`; the three must agree or the loader refuses the bundle.
 - Swift product: `FreelanceTracker`, a dynamic library. The harness target is `FreelanceTrackerHarness`.
-- SDK checkout: `/Users/maksim/desktop/droppykit` (DroppyKit 1.8.1). Docs online: https://getdroppy.app/docs/droppykit
+- SDK checkout: `/Users/maksim/desktop/droppykit` (DroppyKit 1.16.0). Docs online: https://getdroppy.app/docs/droppykit
 - Host: Droppy 15.3 or later, which runs an unsigned bundle once its user approves that build under Settings, Store, Local droplets and asks again each time it opens, or the free Droppy Playground (https://getdroppy.app/download/playground), which loads unsigned bundles without asking.
 
 ## The loop
