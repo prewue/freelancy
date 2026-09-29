@@ -242,10 +242,11 @@ https://getdroppy.app/droplet-developer-terms.
   the project colour over a stronger fill of the same colour.
 - **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
   `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
-  earnings, `+$124` and so on, orbiting it on a tilted ring, behind and in front of it, on a
-  `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt), and "Create project" in
-  plain glass (`DroppyGlassButtonStyle`, no tint), which starts the project flow. `widgetHeight`
-  gives the menu `startScreenHeight` (178) then. `NoProjectScreen` (a timer or flow with nothing
+  earnings, `+$124` and so on, and one "Designed by 8LX" tinted in the logo's blue
+  (`FreelancyLogo.blue`), orbiting it on a 118pt tilted ring, behind and in front of it, on a
+  `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt), and, 20pt below them,
+  "Create project" in plain glass (`DroppyGlassButtonStyle`, no tint), which starts the project
+  flow. `widgetHeight` gives the menu `startScreenHeight` (186) then. `NoProjectScreen` (a timer or flow with nothing
   to show) is the same screen; the paired view keeps `PairedEmptyView`.
 - **Logo and icon.** `app-logo.svg` at the package root is the artwork as drawn in Figma. The
   droplet icon (`FreelanceTracker.icon`) is three clean SVG layers made from it, because actool
