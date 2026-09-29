@@ -1,5 +1,5 @@
 ---
-description: Freelance Tracker is a Droplet for Droppy, built with DroppyKit. The brief, the build loop and the rules live in AGENTS.md at the package root.
+description: Freelancy is a Droplet for Droppy, built with DroppyKit. The brief, the build loop and the rules live in AGENTS.md at the package root.
 alwaysApply: true
 ---
 

@@ -9,7 +9,7 @@ the notch, the shelf, the lock screen and the menu bar.
 
 - Droplet id: `freelance-tracker`. It is also `FreelanceTrackerDroplet.id` in Swift and `id` in `droplet.json`; the three must agree or the loader refuses the bundle.
 - Swift product: `FreelanceTracker`, a dynamic library. The harness target is `FreelanceTrackerHarness`.
-- SDK checkout: `/Users/maksim/desktop/droppykit` (DroppyKit 1.16.0). Docs online: https://getdroppy.app/docs/droppykit
+- SDK checkout: `/Users/maksim/desktop/droppykit` (DroppyKit 1.20.1). Docs online: https://getdroppy.app/docs/droppykit
 - Host: Droppy 15.3 or later, which runs an unsigned bundle once its user approves that build under Settings, Store, Local droplets and asks again each time it opens, or the free Droppy Playground (https://getdroppy.app/download/playground), which loads unsigned bundles without asking.
 
 ## The loop
@@ -70,9 +70,11 @@ package pins; `droppykit update` moves both to the newest release. A build that 
   is for a tile or a chip inside the widget that has to read as raised, never a frame.
 - **Lay the widget out like Droppy's.** The root view fills the rectangle
   (`.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)`) with ONE
-  padding, `.padding(context.contentInsets)`, and nothing on top of it. That is the host's own
-  inset for the slot and it is ZERO under a notch: the shelf's chrome already inset the
-  rectangle, so padding again puts the widget lower and narrower than the built-in beside it.
+  padding, `.padding(context.contentInsets)`, and nothing on top of it. It clears the host's
+  rounded clip: 8 on every edge under the 18pt card corner (a notch, and any row on either
+  shape), 0 alone on the island, where the island shell clips the card and keeps one even gap.
+  The shelf's chrome already inset the rectangle, so never add your own padding or corner
+  inset on top: it doubles the gap.
   Leading text, trailing `.monospacedDigit()` numbers, rows that span the
   full width, a header row of a 12pt symbol and a 12pt semibold title with the widget's control
   at its trailing end, `DroppySpacing` steps between rows. Declare the height the content
@@ -115,13 +117,20 @@ package pins; `droppykit update` moves both to the newest release. A build that 
 - **Look like Droppy, not like a guest.** Surfaces are dark. Foreground colours come from
   `AdaptiveColors`, spacing from `DroppySpacing`, radii from `DroppyRadius` with
   `style: .continuous`. No borders or outlines, no gradients, no ALL-CAPS labels, sentence
-  case everywhere, and never paint your own background on a widget. Settings panes are built
-  from `DropletSettingsCard`, `DropletControlRow`, `DropletToggleRow`, `DropletStackedRow`
-  and `DropletSliderRow`.
+  case everywhere, and never paint your own background on a widget. Never repeat the page
+  header in a settings pane: Droppy already shows the droplet's icon, name, summary and maker
+  above it, so the pane starts with its first setting (the Store refuses a pane that shows the
+  droplet's own icon or its name as a title). Settings panes are rooted
+  in `DropletSettingsPane` (`minAPI` 1.9.0) and built from `DropletSettingsCard`,
+  `DropletSettingsSection`, `DropletControlRow`, `DropletToggleRow`, `DropletStackedRow` and
+  `DropletSliderRow`; the host mounts the pane in its native grouped form, so the pane's
+  content is a list of sections, never a `VStack`, and it places no dividers.
 - **`droplet.json` is the truth for the build.** `Info.plist` is generated from it.
   `version` is numeric `major.minor.patch`; `summary` is at most 60 characters;
   `minAppVersion` stays `15.3.0` unless the droplet needs something newer; `kit.minAPI` is
-  the oldest DroppyKit API the droplet actually calls.
+  the oldest DroppyKit API the droplet actually calls. `droppykit build` fails when it is
+  older than that and names the calls and the version to set; set that version, never
+  lower it to get a droplet loaded.
 - **Do not edit anything under `/Users/maksim/desktop/droppykit`.** That is the SDK checkout; fixes there go
   upstream. This package is where the work is.
 
@@ -187,8 +196,13 @@ Your own build runs in Droppy only after you approve it under Settings, Store, L
 droplets, and Droppy asks again each time it opens; everyone else gets the droplet from
 the Store, signed by Droppy after review.
 When the droplet is done: replace the placeholder icon and creator avatar, fill in
-`creator` and `source` in `droplet.json`, push the repository, and run `droppykit submit`. It
-opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
+`creator` and `source` in `droplet.json`, write `CHANGELOG.md`, and run `droppykit submit`.
+The Store is a repository (gitlab.com/droppyformac1/droplets, one folder per droplet):
+`submit` forks it, copies this package into `droplets/<id>/`, pushes a branch and opens
+the merge request; when a maintainer merges it, the pipeline builds, signs and publishes
+it. `droppykit submit --print` shows the plan without doing it (needs `glab`, signed in).
+Opening the merge request means accepting the Droplet developer terms at
+https://getdroppy.app/droplet-developer-terms.
 
 ## Project notes (Freelancy)
 
@@ -262,7 +276,14 @@ opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
   project runs; the running session keeps running. Both questions can be switched off in
   Settings, Shelf ("Ask before starting a new session", "Ask before switching projects"; the
   shelf buttons call `requestNewSession` and `requestOpen`, which read them).
-- **Settings pane.** A project row starts with `ProjectLookMenu`: a 28pt superellipse square in the project colour
+- **Settings pane.** The root is `DropletSettingsPane`, every group a `DropletSettingsSection`
+  over a `DropletSettingsCard`, no dividers: on macOS 15+ Droppy mounts it in its grouped Form
+  and every row is a Form row (macOS 14 gets the legacy cards, so the custom project and
+  session rows pad themselves there through `settingsRowPadding()`). Currency is a native
+  `Picker` (`CurrencyPicker`), rate and a session's length are native rounded-border fields
+  (`ValueField`: Return or focus loss commits, Escape puts the stored value back), and text
+  fields take `.labelsHidden()`, or the Form turns their title into a row label. Sessions of
+  the expanded project are rows of their own, indented under its name. A project row starts with `ProjectLookMenu`: a 28pt superellipse square in the project colour
   with its icon, opening a menu of inline pickers for colour and icon. Deleting a project or a
   session in Settings asks inline (`InlineDeleteConfirmation`: the question, Cancel, Delete) in
   place of the row's controls; a session row also hides its day and length while it asks. The HUD toggle is "Show a strip on start and pause".
@@ -282,8 +303,8 @@ opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
   from (dot, name, total time) and `.sessions` the same list of the current project's sessions
   (`PairedSessionsView`), both in a `VerticalFadingScroll`; anything else the timer, whose bottom
   row is two 22pt glass capsules: the session (bars and name, a button that opens the sessions
-  list and grows under the pointer) and the rate. A pending confirmation replaces any of them. Timer and sessions come to the same `widgetHeight` (140), the
-  projects list to 162, and `makeWidgetView` sends a compact mount on any other screen
+  list and grows under the pointer) and the rate. A pending confirmation replaces any of them. Timer and sessions come to the same `widgetHeight` (142), the
+  projects list to 164, and `makeWidgetView` sends a compact mount on any other screen
   back to the timer, so a grouped row never takes the height of a solo-only screen.
 - **Analytics.** The nav row is back disc, the project tabs (glass pills as tall as the discs,
   the chosen one tinted in its colour, in a `FadingScroll`), CSV disc. Under it `PagedScroll`:
@@ -306,8 +327,12 @@ opens getdroppy.app/submit-droplet with the repository, commit and id filled in.
   that runs past midnight stays on its first day. The CSV (`TrackerCSV.render`, one project, named
   after it) is one line per session, oldest first: project, session, date, start, duration, decimal hours, rate, currency,
   earned, status.
-- **Corners.** The shelf clips the widget's corners, so every screen pads `screenSide` 10,
-  `screenTop` 6 and `screenBottom` 8; a 24pt disc then sits outside the curve.
+- **Corners and insets.** The root pads `context.contentInsets` once and nothing else: the
+  host's clearance for its clip, 8 on every edge under the 18pt card corner (a notch, any
+  grouped row) and 0 on a solo island card (DroppyKit 1.20.1, Droppy 16.0.1, Playground
+  1.0.27; older hosts hand 0 and 12). There is no screen padding of our own any more (the
+  review of !41 asked for exactly that). `widgetHeight` budgets `hostInsets`, the 16 the
+  corner takes.
 - **Height.** `FreelanceTrackerDroplet.widgetHeight` derives it from the screen; the menu is
   never shorter than the paired timer needs;
   every mutation captures the height before and calls `refreshLayout(from:)`.
