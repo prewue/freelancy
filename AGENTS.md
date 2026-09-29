@@ -248,11 +248,13 @@ https://getdroppy.app/droplet-developer-terms.
   fading to 25% at both ends), and, 20pt below them, "Create project" in clear glass
   (`ClearGlassButtonStyle`: `.glassEffect(.clear.interactive())` on macOS 26+, Droppy's glass
   control before; a deliberate step off the kit's button styles, so the beam reads through) with
-  `EdgeBeam` behind it: on hover a saturated blue and white beam runs round a capsule of the
-  button's size, a sharp line and two glows added with `plusLighter`, plus an outer glow (the
+  `EdgeBeam` behind it: a saturated blue and white beam runs round a capsule of the button's
+  size all the time and stops while the pointer is over the button (hovered, it is a plain
+  button), a sharp line and two glows added with `plusLighter`, plus an outer glow (the
   beam blurred wide and not clipped) that spills past the button and travels with it (its
-  `TimelineView` is paused while not hovered). The button's label is pure white. It starts the project flow. `widgetHeight` gives the menu
-  `startScreenHeight` (195) then. `NoProjectScreen` (a timer or flow with nothing
+  `TimelineView` is paused while hovered). 14pt under the button keep the widget's rectangle
+  from clipping that glow. The button's label is pure white. It starts the project flow. `widgetHeight` gives the menu
+  `startScreenHeight` (209) then. `NoProjectScreen` (a timer or flow with nothing
   to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: the logo turning (`TurningLogo`, no orbit,
   which is too wide for a grouped card) and "Open Freelancy", which shows the widget alone (`revealAlone`, `host.shelf.open(revealing:)`).
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
