@@ -381,7 +381,7 @@ https://getdroppy.app/droplet-developer-terms.
   session still starts one running (`newSession(on:running: true)`): Start means start.
 - **Show me the money.** The `moneyFirst` preference (Settings, Shelf) swaps the two figures on
   the timer, the paired timer, the running menu item and every card: `droplet.ordered(time:money:)`
-  hands them back in the chosen order. The notch row has its own switch (below).
+  hands them back in the chosen order, and it swaps the notch row's two figures too.
 - **Paired.** `PairedView` switches on `screen`: `.projects` is a short list of projects to pick
   from (dot, name, total time) and `.sessions` the same list of the current project's sessions
   (`PairedSessionsView`), both in a `VerticalFadingScroll`; anything else the timer, whose clock shrinks with its length (`PairedTimerView.clockSize`: 22pt
@@ -411,12 +411,14 @@ https://getdroppy.app/droplet-developer-terms.
   rolls everything to the new numbers. A project card's hover controls are analytics, edit,
   delete; analytics opens on that project through `analyticsProjectID`.
 - **Notch row (live activity).** Not interactive: Droppy opens the shelf on hover or click and
-  hides the row, so a control in it can never be clicked, and `isInteractive` only widens the
-  wings to 120pt. The leading wing is a white pause or play glyph (`CompactStatusView`, swapping on
-  `DroppyTransition.compactContent`); the trailing wing (`CompactFigureView`) is the time, or the
-  amount when "Show the amount in the notch" (`notchShowsMoney`, default off) is on, both in the
-  project's colour and dimmed while paused. The row follows `notchSession`: the running session,
-  or the last one while it is paused (`notchSessionID`, not persisted), since the docs say never to
+  hides the row, and the row gets no pointer events at all (a hover probe logged nothing while
+  the shelf opened and closed), so no button, hold or hover action can work there; `isInteractive`
+  only widens the wings to 120pt. Droppy 16.0.1 also never reads `preferredWidth` (not among its
+  imported DroppyKit symbols), so the wings keep the host's fixed widths. Both wings are
+  `CompactFigureView`: the amount subtle on the left (`notchSurfaceSecondaryText`) and the time
+  in the project's colour on the right; "Show me the money" (`moneyFirst`) swaps them. Both roll
+  on `RollingDigits` and dim while paused. The row follows `notchSession`: the running session, or
+  the last one while it is paused (`notchSessionID`, not persisted), since the docs say never to
   unpublish for a pause; it goes when another session starts, the session or project goes, or
   Droppy relaunches.
 - **Colour.** `ProjectColor` (nine cases) is stored on the project; a project saved before it
