@@ -356,9 +356,16 @@ https://getdroppy.app/droplet-developer-terms.
   with its icon, opening a menu of inline pickers for colour and icon. Deleting a project or a
   session in Settings asks inline (`InlineDeleteConfirmation`: the question, Cancel, Delete) in
   place of the row's controls; a session row also hides its day and length while it asks. The HUD toggle is "Show a strip on start and pause".
-- **Session rename.** The pencil on a session card calls `startRenamingSession`; `.renameSession`
-  shows `SessionRenameScreen` (same field, nav and "or Press ⏎" row as the project flow, Save in
-  the project colour), backed by `sessionRename`. It counts as a typing flow for the shelf hold.
+- **Session rename and naming.** The pencil on a session card calls `startRenamingSession`;
+  `.renameSession` shows `SessionRenameScreen` (same field, nav and "or Press ⏎" row as the
+  project flow, Save in the project colour), backed by `sessionRename`. "Name new sessions" (the
+  `namesNewSessions` preference, default on) sends the plus to the same page first
+  (`startNewSession` → `startNamingNewSession`, `sessionRename.sessionID` `nil`): the
+  placeholder is the default name (`defaultSessionName`), the button says Start, an empty field
+  keeps the default, and Back returns to the timer or Sessions (`returnScreen`). With "Ask
+  before starting a new session" on (default now off) the page follows the question. A grouped
+  row has no room for it, so there the session starts at once; Start on a project with no
+  session also starts at once. The page counts as a typing flow for the shelf hold.
 - **Card sizes.** Projects and Sessions come to the timer's height (`cardRowHeight` 100 for the
   row, `timerRowHeight` 68 for the timer's clock row: all three 152), so moving between them
   never resizes the shelf. `CardRow` and the cards take the height the screen has left and
