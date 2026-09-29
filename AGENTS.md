@@ -260,14 +260,16 @@ https://getdroppy.app/droplet-developer-terms.
   control before; a deliberate step off the kit's button styles, so the beam reads through) with
   `EdgeBeam` behind it: on hover a saturated blue and white beam runs round a capsule of the
   button's size (otherwise it is a plain button), a sharp line and two glows added with `plusLighter`, plus an outer glow (the
-  beam blurred 14 over a 10pt band, not clipped) that spills past the button and travels with it (its
+  beam blurred 9 over a 10pt band, not clipped, fading to nothing 12pt below the button so the
+  widget's edge never cuts it, even alone on the island where the host adds no inset; the
+  harness draws it only inside the button, so check it in the Playground) that spills past the button and travels with it (its
   `TimelineView` is paused while not hovered; `StartScreen` keeps the beam's clock,
   `beamTurns` and `beamRunningSince`, and moves it in the hover handler itself, so the beam
   picks up where it stopped instead of jumping to where the wall clock would put it). 14pt under the button keep the widget's rectangle
   from clipping that glow. The button's label is pure white. It starts the project flow. `widgetHeight` gives the menu
   `startScreenHeight` (209) then. `NoProjectScreen` (a timer or flow with nothing
   to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: the logo turning (`TurningLogo`, no orbit,
-  which is too wide for a grouped card) and "Open Freelancy", which shows the widget alone (`revealAlone`, `host.shelf.open(revealing:)`).
+  which is too wide for a grouped card) and "Open Freelancy", which shows the widget alone (`showWidgetAlone`, `host.shelf.open(revealing:)`).
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
   it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) is three clean SVG
   layers made from it, because actool cannot draw the Figma export's `foreignObject` conic
@@ -317,7 +319,7 @@ https://getdroppy.app/droplet-developer-terms.
   Metal `layerEffect` would need a metallib, which `droppykit build` does not compile and the Store
   does not accept prebuilt. It is expensive, so it draws as little as it can: each blurred copy
   draws only the items that reach into its part of the band (`EdgeBlurCopy.reach`,
-  `InfiniteWheel.virtuals`), and a cell reads `wheelBlurCopy` to draw a cheap face there (a
+  `InfiniteWheel.virtuals`), and a cell reads `isBlurredCopy` to draw a cheap face there (a
   currency pill drops its glass; glass in every copy cost most of the frame rate). The dark edge
   fade is 56pt; the blur does the softening. The harness draws neither blur nor glass; look in
   the Playground. A click on an item more than one away glides there on an ease-out as long as
@@ -341,10 +343,10 @@ https://getdroppy.app/droplet-developer-terms.
   "Start new sessions running" is off). `confirmPending()` acts. After a new session,
   `freshSessionID` is set for 2.4 s and `SessionNameLine` shows "✓ Session N started" in the
   project colour on the timer and the paired timer. Picking another project from a card or the
-  paired list goes through `requestOpen`, which asks first while a session of a different
+  paired list goes through `requestOpenProject`, which asks first while a session of a different
   project runs; the running session keeps running. Both questions can be switched off in
   Settings, Shelf ("Ask before starting a new session", "Ask before switching projects"; the
-  shelf buttons call `requestNewSession` and `requestOpen`, which read them).
+  shelf buttons call `requestNewSession` and `requestOpenProject`, which read them).
 - **Settings pane.** The root is `DropletSettingsPane`, every group a `DropletSettingsSection`
   over a `DropletSettingsCard`, no dividers: on macOS 15+ Droppy mounts it in its grouped Form
   and every row is a Form row (macOS 14 gets the legacy cards, so the custom project and
@@ -374,7 +376,8 @@ https://getdroppy.app/droplet-developer-terms.
   figure and bottom row; session cards pad 8 by 12; 12pt between cards. Hover controls sit over
   the card and never move its content.
 - **Start new sessions running.** The `startsSessionsRunning` preference (default on). Off, a new
-  session is created paused, nothing else is paused, and no HUD shows. Start on a project with no
+  session is created paused and no HUD shows. A new session always stops the one running before
+  it, either way. Start on a project with no
   session still starts one running (`newSession(on:running: true)`): Start means start.
 - **Show me the money.** The `moneyFirst` preference (Settings, Shelf) swaps the two figures on
   the timer, the paired timer, the running menu item and every card: `droplet.ordered(time:money:)`
@@ -386,7 +389,7 @@ https://getdroppy.app/droplet-developer-terms.
   row is two 22pt glass capsules: the session (bars and name, a button that opens the sessions
   list and grows under the pointer) and the rate. A pending confirmation replaces any of them. The descriptor has ONE height for
   both compositions (a grouped row honours the solo height, per the SDK), so the widget
-  remembers how Droppy last mounted it (`mountedGrouped`, set in `makeWidgetView`, never in the
+  remembers how Droppy last mounted it (`isInGroupedRow`, set in `makeWidgetView`, never in the
   harness or a preview) and, grouped, declares `groupedHeight` (110: the paired timer's 94 and
   the host's insets), which the paired timer, lists, empty state and a compact question all fit.
   Declaring the solo screen's height there made a grouped row as tall as the start screen. A
@@ -407,15 +410,15 @@ https://getdroppy.app/droplet-developer-terms.
   `.contentTransition(.numericText())` and bars animate on their values, so switching project
   rolls everything to the new numbers. A project card's hover controls are analytics, edit,
   delete; analytics opens on that project through `analyticsProjectID`.
-- **Notch row (live activity).** Interactive (`isInteractive` true for as long as it is
-  published, so Droppy widens the wings to 120pt): the leading wing is pause and play
-  (`CompactControlView`, `DroppyLiveActivityControlStyle`, a white glyph swapping on
-  `DroppyTransition.compactContent`), calling `toggleLiveSession` (no HUD strip; the row shows the
-  change); the trailing wing (`CompactFigureView`) is the time in the project's colour, or the
-  amount when "Show the amount in the notch" (`notchShowsMoney`, default off) is on, dimmed while
-  paused. The row follows `liveSession`: the running session, or the one last running while it
-  is paused (`liveSessionID`, not persisted), since the docs say never to unpublish for a pause;
-  it goes when another session starts, the session or its project goes, or Droppy relaunches.
+- **Notch row (live activity).** Not interactive: Droppy opens the shelf on hover or click and
+  hides the row, so a control in it can never be clicked, and `isInteractive` only widens the
+  wings to 120pt. The leading wing is a white pause or play glyph (`CompactStatusView`, swapping on
+  `DroppyTransition.compactContent`); the trailing wing (`CompactFigureView`) is the time, or the
+  amount when "Show the amount in the notch" (`notchShowsMoney`, default off) is on, both in the
+  project's colour and dimmed while paused. The row follows `notchSession`: the running session,
+  or the last one while it is paused (`notchSessionID`, not persisted), since the docs say never to
+  unpublish for a pause; it goes when another session starts, the session or project goes, or
+  Droppy relaunches.
 - **Colour.** `ProjectColor` (nine cases) is stored on the project; a project saved before it
   existed, or with an unknown value, decodes as cyan. It paints the badge, the name on a project card, the Sessions title,
   the analytics tab and earnings bars, and the time in the notch row's trailing wing.
