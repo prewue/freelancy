@@ -349,9 +349,15 @@ https://getdroppy.app/droplet-developer-terms.
   from (dot, name, total time) and `.sessions` the same list of the current project's sessions
   (`PairedSessionsView`), both in a `VerticalFadingScroll`; anything else the timer, whose bottom
   row is two 22pt glass capsules: the session (bars and name, a button that opens the sessions
-  list and grows under the pointer) and the rate. A pending confirmation replaces any of them. Timer and sessions come to the same `widgetHeight` (142), the
-  projects list to 164, and `makeWidgetView` sends a compact mount on any other screen
-  back to the timer, so a grouped row never takes the height of a solo-only screen.
+  list and grows under the pointer) and the rate. A pending confirmation replaces any of them. The descriptor has ONE height for
+  both compositions (a grouped row honours the solo height, per the SDK), so the widget
+  remembers how Droppy last mounted it (`mountedGrouped`, set in `makeWidgetView`, never in the
+  harness or a preview) and, grouped, declares `groupedHeight` (110: the paired timer's 94 and
+  the host's insets), which the paired timer, lists, empty state and a compact question all fit.
+  Declaring the solo screen's height there made a grouped row as tall as the start screen. A
+  grouped mount with projects sends a solo-only screen back to the timer; with no projects it
+  leaves the start screen alone (it used to send it to `.timer`, 142pt, which drew the start
+  screen cut off until the flow's Back restored `.menu`).
 - **Analytics.** The nav row is back disc, the project tabs (glass pills as tall as the discs,
   the chosen one tinted in its colour, in a `FadingScroll`), CSV disc. Under it `PagedScroll`:
   full-width pages with a 12pt gap snapping one at a time; the moment a page moves both edges fade
@@ -379,7 +385,12 @@ https://getdroppy.app/droplet-developer-terms.
   1.0.27; older hosts hand 0 and 12). There is no screen padding of our own any more (the
   review of !41 asked for exactly that). `widgetHeight` budgets `hostInsets`, the 16 the
   corner takes.
-- **Height.** `FreelanceTrackerDroplet.widgetHeight` derives it from the screen; the menu is
+- **Height.** `FreelanceTrackerDroplet.widgetHeight` derives it from the screen (or is
+  `groupedHeight` in a grouped row; a timer with no project is the start screen's height);
+  every change goes to the host through `publishLayoutChange()`: the
+  `ShelfWidgetDynamicLayoutProviding` publisher (hosts on DroppyKit 1.20.0+ also call
+  `currentLayoutTraits` when they size the shelf, so a reopened shelf never uses a stale height;
+  the protocol dates from 1.0.0, no `minAPI` change) and `invalidateLayout` for older hosts; the menu is
   never shorter than the paired timer needs;
   every mutation captures the height before and calls `refreshLayout(from:)`.
 - **Digits.** `RollingDigits` renders one character per cell; a changed character slides up
