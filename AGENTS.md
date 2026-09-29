@@ -248,11 +248,12 @@ https://getdroppy.app/droplet-developer-terms.
   fading to 25% at both ends), and, 20pt below them, "Create project" in clear glass
   (`ClearGlassButtonStyle`: `.glassEffect(.clear.interactive())` on macOS 26+, Droppy's glass
   control before; a deliberate step off the kit's button styles, so the beam reads through) with
-  `EdgeBeam` behind it: a saturated blue and white beam runs round a capsule of the button's
-  size all the time and stops while the pointer is over the button (hovered, it is a plain
-  button), a sharp line and two glows added with `plusLighter`, plus an outer glow (the
-  beam blurred wide and not clipped) that spills past the button and travels with it (its
-  `TimelineView` is paused while hovered). 14pt under the button keep the widget's rectangle
+  `EdgeBeam` behind it: on hover a saturated blue and white beam runs round a capsule of the
+  button's size (otherwise it is a plain button), a sharp line and two glows added with `plusLighter`, plus an outer glow (the
+  beam blurred 14 over a 10pt band, not clipped) that spills past the button and travels with it (its
+  `TimelineView` is paused while not hovered; `StartScreen` keeps the beam's clock,
+  `beamTurns` and `beamRunningSince`, and moves it in the hover handler itself, so the beam
+  picks up where it stopped instead of jumping to where the wall clock would put it). 14pt under the button keep the widget's rectangle
   from clipping that glow. The button's label is pure white. It starts the project flow. `widgetHeight` gives the menu
   `startScreenHeight` (209) then. `NoProjectScreen` (a timer or flow with nothing
   to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: the logo turning (`TurningLogo`, no orbit,
