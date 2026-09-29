@@ -242,9 +242,10 @@ https://getdroppy.app/droplet-developer-terms.
   (click it to type an exact one) over a `RulerWheel` (whole amounts 1 to 500; arrows step 1,
   Shift 10; a typed amount glides the ruler to it). `.currency` (`CurrencyStep`) has a search in
   the nav row (`NavSearch`: a 28pt glass disc that opens across the row in beats: the title fades
-  out, the disc springs open (response 0.48, damping 0.68: `controlMorph`'s 0.9 barely
-  overshoots), then the magnifier and a SwiftUI placeholder come in out of a blur over a
-  left-aligned `FlowTextField`; closing runs backwards; it
+  out, the disc springs open (response 0.46, damping 0.8: `controlMorph`'s 0.9 barely
+  overshoots) with the magnifier riding from the middle to the leading edge (leading-aligned,
+  centred in the disc by its padding), then 260 ms in a SwiftUI placeholder and the close
+  button come in out of a blur over a left-aligned `FlowTextField`; closing runs backwards; it
   matches code, name and symbol; Return confirms, Escape closes) and shows its matches as a
   bounded row (`wraps: false`); the codes are text only and pass under one glass lens held in
   the middle, so the selection moves with the scroll. Create / Save is plain glass
