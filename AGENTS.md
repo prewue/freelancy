@@ -245,9 +245,11 @@ https://getdroppy.app/droplet-developer-terms.
   earnings, `+$124` and so on, and one "By 8LX" in the logo's blue (`FreelancyLogo.blue`, tinted
   glass over a 0.85 fill of it), orbiting it on a 104pt tilted ring, behind and in front of it, on a
   `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt, 5pt line spacing, white
-  fading to 25% at both ends), and, 20pt below them, "Create project" in plain glass
-  (`DroppyGlassButtonStyle`, no tint) with `EdgeBeam` behind it: on hover a blue and white beam
-  runs round a capsule of the button's size, visible through the glass (its `TimelineView` is
+  fading to 25% at both ends), and, 20pt below them, "Create project" in clear glass
+  (`ClearGlassButtonStyle`: `.glassEffect(.clear.interactive())` on macOS 26+, Droppy's glass
+  control before; a deliberate step off the kit's button styles, so the beam reads through) with
+  `EdgeBeam` behind it: on hover a saturated blue and white beam runs round a capsule of the
+  button's size, a sharp line and two glows added with `plusLighter` (its `TimelineView` is
   paused while not hovered). It starts the project flow. `widgetHeight` gives the menu
   `startScreenHeight` (195) then. `NoProjectScreen` (a timer or flow with nothing
   to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: the logo turning (`TurningLogo`, no orbit,
