@@ -244,10 +244,14 @@ https://getdroppy.app/droplet-developer-terms.
   `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
   earnings, `+$124` and so on, and one "By 8LX" in the logo's blue (`FreelancyLogo.blue`, tinted
   glass over a 0.85 fill of it), orbiting it on a 104pt tilted ring, behind and in front of it, on a
-  `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt), and, 20pt below them,
-  "Create project" in plain glass (`DroppyGlassButtonStyle`, no tint), which starts the project
-  flow. `widgetHeight` gives the menu `startScreenHeight` (186) then. `NoProjectScreen` (a timer or flow with nothing
-  to show) is the same screen; the paired view keeps `PairedEmptyView`.
+  `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt, 5pt line spacing, white
+  fading to 25% at both ends), and, 20pt below them, "Create project" in plain glass
+  (`DroppyGlassButtonStyle`, no tint) with `EdgeBeam` behind it: on hover a blue and white beam
+  runs round a capsule of the button's size, visible through the glass (its `TimelineView` is
+  paused while not hovered). It starts the project flow. `widgetHeight` gives the menu
+  `startScreenHeight` (191) then. `NoProjectScreen` (a timer or flow with nothing
+  to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: "No projects yet", a line, and "Open
+  Freelancy", which shows the widget alone (`revealAlone`, `host.shelf.open(revealing:)`).
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
   it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) is three clean SVG
   layers made from it, because actool cannot draw the Figma export's `foreignObject` conic
@@ -341,13 +345,15 @@ https://getdroppy.app/droplet-developer-terms.
   by 12, session cards 8 by 14; 12pt between cards. Hover controls sit over the card and never
   move its content.
 - **Start new sessions running.** The `startsSessionsRunning` preference (default on). Off, a new
-  session is created paused, nothing else is paused, and no HUD shows.
+  session is created paused, nothing else is paused, and no HUD shows. Start on a project with no
+  session still starts one running (`newSession(on:running: true)`): Start means start.
 - **Show me the money.** The `moneyFirst` preference (Settings, Shelf) swaps the two figures on
   the timer, the paired timer, the running menu item and every card: `droplet.ordered(time:money:)`
   hands them back in the chosen order. The notch wings do not swap.
 - **Paired.** `PairedView` switches on `screen`: `.projects` is a short list of projects to pick
   from (dot, name, total time) and `.sessions` the same list of the current project's sessions
-  (`PairedSessionsView`), both in a `VerticalFadingScroll`; anything else the timer, whose bottom
+  (`PairedSessionsView`), both in a `VerticalFadingScroll`; anything else the timer, whose clock shrinks with its length (`PairedTimerView.clockSize`: 22pt
+  for `00:00` down to 16 for `120:45:21`, so it fits between the discs) and whose bottom
   row is two 22pt glass capsules: the session (bars and name, a button that opens the sessions
   list and grows under the pointer) and the rate. A pending confirmation replaces any of them. The descriptor has ONE height for
   both compositions (a grouped row honours the solo height, per the SDK), so the widget
