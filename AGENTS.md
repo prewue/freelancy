@@ -240,12 +240,15 @@ https://getdroppy.app/droplet-developer-terms.
   is the colour wheel (`WheelStyle.colors`), each colour a plain disc (`ColorOrb`). Back walks the steps and leaves from the first. Steps swap on
   `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
   the project colour over a stronger fill of the same colour.
-- **Start screen.** With no projects the menu is `StartScreen` instead: `StartEmblem` (a
-  stopwatch that breathes, the nine project colours orbiting it on a tilted ring, in front of and
-  behind it, on a `TimelineView`), "Freelancy", a line, and "Create project" (vivid glass in the
-  first project's suggested colour), which starts the project flow. `widgetHeight` gives the menu
-  `startScreenHeight` (124) then. `NoProjectScreen` (a timer or flow with nothing to show) is the
-  same screen. The paired view keeps `PairedEmptyView`.
+- **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
+  `FreelancyLogo` (the droplet's blue logo drawn in SwiftUI so its dots and hands can move),
+  "Welcome to Freelancy" (20pt), two lines (13pt), and "Create project" in plain glass
+  (`DroppyGlassButtonStyle`, no tint), which starts the project flow. `widgetHeight` gives the
+  menu `startScreenHeight` then. `NoProjectScreen` (a timer or flow with nothing to show) is the
+  same screen; the paired view keeps `PairedEmptyView`. TEMPORARY: six candidate animations
+  (`StartAnimation`: cascade, clock sweep, dot wave, assemble, tilt and shine, colour orbit)
+  cycle on a click on the logo, named in a caption under the button; once one is chosen, drop
+  the rest, the caption and the click, and take the caption's 21pt off `startScreenHeight`.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
   window, and only the host can make it so (DroppyKit 1.10.0, hence `minAPI` 1.10.0; hosts on
   1.8.1, such as Playground 1.0.20, refuse the bundle). `FlowFocus.ensureKey` calls
