@@ -249,9 +249,9 @@ https://getdroppy.app/droplet-developer-terms.
   (`DroppyGlassButtonStyle`, no tint) with `EdgeBeam` behind it: on hover a blue and white beam
   runs round a capsule of the button's size, visible through the glass (its `TimelineView` is
   paused while not hovered). It starts the project flow. `widgetHeight` gives the menu
-  `startScreenHeight` (191) then. `NoProjectScreen` (a timer or flow with nothing
-  to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: "No projects yet", a line, and "Open
-  Freelancy", which shows the widget alone (`revealAlone`, `host.shelf.open(revealing:)`).
+  `startScreenHeight` (195) then. `NoProjectScreen` (a timer or flow with nothing
+  to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: the logo turning (`TurningLogo`, no orbit,
+  which is too wide for a grouped card) and "Open Freelancy", which shows the widget alone (`revealAlone`, `host.shelf.open(revealing:)`).
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
   it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) is three clean SVG
   layers made from it, because actool cannot draw the Figma export's `foreignObject` conic
