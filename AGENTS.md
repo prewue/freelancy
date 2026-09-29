@@ -238,8 +238,15 @@ https://getdroppy.app/droplet-developer-terms.
   `FlowNav` lays it over the row in a `ZStack`) that opens `.color`, "Choose color", the same way:
   `pendingColor` holds the choice, Confirm applies, Back discards, back to `.look`. `ColorStep`
   is the colour wheel (`WheelStyle.colors`), each colour a plain disc (`ColorOrb`). Back walks the steps and leaves from the first. Steps swap on
-  `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
-  the project colour over a stronger fill of the same colour.
+  `DroppyTransition.element`. `.rate` (`RateStep`) is the amount in the project's colour at 26pt
+  (click it to type an exact one) over a `RulerWheel` (whole amounts 1 to 500; arrows step 1,
+  Shift 10; a typed amount glides the ruler to it). `.currency` (`CurrencyStep`) has a search in
+  the nav row (`NavSearch`: a 28pt glass disc that springs open across the row on
+  `DroppyAnimation.controlMorph` into a left-aligned `FlowTextField`, the title blurring out; it
+  matches code, name and symbol; Return confirms, Escape closes) and shows its matches as a
+  bounded row (`wraps: false`); the codes are text only and pass under one glass lens held in
+  the middle, so the selection moves with the scroll. Create / Save is plain glass
+  (`VividGlassButtonStyle` with no accent); the colour step's Confirm keeps the chosen colour.
 - **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
   `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
   earnings, `+$124` and so on, and one "By 8LX" in the logo's blue (`FreelancyLogo.blue`, tinted
@@ -286,7 +293,12 @@ https://getdroppy.app/droplet-developer-terms.
   claim first responder when their window is or becomes key, which is what asks for focus. While
   the flow is up the shelf is held open (`setHoldsOpen`) and the descriptor's `focusPolicy` is
   `.keyboardFocusable`, `.none` otherwise.
-- **Wheels** (`Wheel.swift`). One system for every picker on the shelf: an `InfiniteWheel` driven
+- **Wheels** (`Wheel.swift`). One system for every picker on the shelf. `WheelEngine.wraps` is an
+  endless ring when true and a row that stops at its ends when false (clamped, rubber-banding
+  under a drag); `InfiniteWheel(wraps:)` passes it and re-points the engine when its items change
+  (a search narrowing them). `RulerWheel` is a bounded engine drawn as tick marks: the middle tick
+  tall and tinted, two either side fainter and shorter, heights and tint on smooth curves of the
+  distance, with the same fade and edge blur. An `InfiniteWheel` driven
   by a `WheelEngine`, drawn to a `WheelStyle` preset (`.icons`, `.colors`, `.currencies`), edges
   softened by `ProgressiveEdgeBlur`. A new wheel adds a preset (pitch, height, edge blur and its
   band, fade) and brings its own cell; the curves are shared and must stay so, the wheels are
