@@ -237,8 +237,8 @@ https://getdroppy.app/droplet-developer-terms.
   a "Color" pill (`VividGlassButtonStyle` in the chosen colour; the title stays centred because
   `FlowNav` lays it over the row in a `ZStack`) that opens `.color`, "Choose color", the same way:
   `pendingColor` holds the choice, Confirm applies, Back discards, back to `.look`. `ColorStep`
-  lays the colours on an arc (`WheelShape.arc`), each a `ColorOrb`: glass tinted its colour over a
-  0.7 disc of the same colour. Back walks the steps and leaves from the first. Steps swap on
+  is the icon wheel's row, centred (`WheelShape.orb`, pitch 56), each colour a `ColorOrb`: glass
+  tinted its colour over a 0.7 disc of the same colour. Back walks the steps and leaves from the first. Steps swap on
   `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
   the project colour over a stronger fill of the same colour.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
@@ -262,10 +262,10 @@ https://getdroppy.app/droplet-developer-terms.
   `.keyboardFocusable`, `.none` otherwise.
 - **Wheels.** `InfiniteWheel` + `WheelEngine` draw the icon, currency and colour pickers: an
   endless ring (virtual indices wrap), the centred item chosen, scale and opacity falling with
-  distance, a fade at each edge. `WheelShape` holds each look: `.icon` and `.pill` are flat with a
-  96pt fade and six items a side; `.arc` lifts items on a hyperbola (`lift`, the curve 14pt below
-  the middle so its ends stay inside the mask), shows four a side (each colour once) and fades
-  40pt. A click on an item more than one away glides there on an ease-out as long as the gap
+  distance, a fade at each edge. `WheelShape` holds each look: `.icon` and `.pill`, and `.orb` for colours, the icon
+  geometry with a blur that grows with the distance from the centre (`blur`), which is how the
+  edges get a progressive blur under the 96pt fade: SwiftUI on macOS 14 has no variable blur
+  through a mask. The harness draws neither the blur nor glass; look in the Playground. A click on an item more than one away glides there on an ease-out as long as the gap
   (up to 0.75 s) instead of the settle spring, which leapt. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
   that only consumes events while the pointer is over the wheel (snaps 90 ms after the last event,
   a haptic tick per item), drag with momentum from the predicted end, click on any item, arrows.
