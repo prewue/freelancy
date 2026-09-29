@@ -262,10 +262,13 @@ https://getdroppy.app/droplet-developer-terms.
   `.keyboardFocusable`, `.none` otherwise.
 - **Wheels.** `InfiniteWheel` + `WheelEngine` draw the icon, currency and colour pickers: an
   endless ring (virtual indices wrap), the centred item chosen, scale and opacity falling with
-  distance, a fade at each edge. `WheelShape` holds each look: `.icon` and `.pill`, and `.orb` for colours, the icon
-  geometry with a blur that grows with the distance from the centre (`blur`), which is how the
-  edges get a progressive blur under the 96pt fade: SwiftUI on macOS 14 has no variable blur
-  through a mask. The harness draws neither the blur nor glass; look in the Playground. A click on an item more than one away glides there on an ease-out as long as the gap
+  distance, a fade at each edge. `WheelShape` holds each look (`.icon`, `.pill` for currencies,
+  `.orb` for colours), and every curve is smooth through the ring: the row gathers on a `tanh`
+  (full pitch at the centre), size and opacity fall on a Gaussian (flat at the top, so the centre
+  item eases rather than pops), and icons (up to 5pt) and colours (up to 7pt, sooner) blur on the
+  Gaussian's complement, the progressive blur under the 96pt fades (SwiftUI on macOS 14 has no
+  variable blur through a mask). An earlier piecewise squeeze changed an item's speed at three
+  steps out, which read as items coasting in and then starting to scale. The harness draws neither the blur nor glass; look in the Playground. A click on an item more than one away glides there on an ease-out as long as the gap
   (up to 0.75 s) instead of the settle spring, which leapt. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
   that only consumes events while the pointer is over the wheel (snaps 90 ms after the last event,
   a haptic tick per item), drag with momentum from the predicted end, click on any item, arrows.
