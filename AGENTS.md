@@ -378,7 +378,7 @@ https://getdroppy.app/droplet-developer-terms.
   session still starts one running (`newSession(on:running: true)`): Start means start.
 - **Show me the money.** The `moneyFirst` preference (Settings, Shelf) swaps the two figures on
   the timer, the paired timer, the running menu item and every card: `droplet.ordered(time:money:)`
-  hands them back in the chosen order. The notch wings do not swap.
+  hands them back in the chosen order. The notch row has its own switch (below).
 - **Paired.** `PairedView` switches on `screen`: `.projects` is a short list of projects to pick
   from (dot, name, total time) and `.sessions` the same list of the current project's sessions
   (`PairedSessionsView`), both in a `VerticalFadingScroll`; anything else the timer, whose clock shrinks with its length (`PairedTimerView.clockSize`: 22pt
@@ -407,9 +407,18 @@ https://getdroppy.app/droplet-developer-terms.
   `.contentTransition(.numericText())` and bars animate on their values, so switching project
   rolls everything to the new numbers. A project card's hover controls are analytics, edit,
   delete; analytics opens on that project through `analyticsProjectID`.
+- **Notch row (live activity).** Interactive (`isInteractive` true for as long as it is
+  published, so Droppy widens the wings to 120pt): the leading wing is pause and play
+  (`CompactControlView`, `DroppyLiveActivityControlStyle`, a white glyph swapping on
+  `DroppyTransition.compactContent`), calling `toggleLiveSession` (no HUD strip; the row shows the
+  change); the trailing wing (`CompactFigureView`) is the time in the project's colour, or the
+  amount when "Show the amount in the notch" (`notchShowsMoney`, default off) is on, dimmed while
+  paused. The row follows `liveSession`: the running session, or the one last running while it
+  is paused (`liveSessionID`, not persisted), since the docs say never to unpublish for a pause;
+  it goes when another session starts, the session or its project goes, or Droppy relaunches.
 - **Colour.** `ProjectColor` (nine cases) is stored on the project; a project saved before it
   existed, or with an unknown value, decodes as cyan. It paints the badge, the name on a project card, the Sessions title,
-  the analytics tab and earnings bars, and the clock in the leading notch wing.
+  the analytics tab and earnings bars, and the time in the notch row's trailing wing.
 - **Analytics figures.** A session's time is booked to the day it was created on, so a session
   that runs past midnight stays on its first day. The CSV (`TrackerCSV.render`, one project, named
   after it) is one line per session, oldest first: project, session, date, start, duration, decimal hours, rate, currency,
