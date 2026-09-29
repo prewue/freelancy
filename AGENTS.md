@@ -242,8 +242,8 @@ https://getdroppy.app/droplet-developer-terms.
   the project colour over a stronger fill of the same colour.
 - **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
   `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
-  earnings, `+$124` and so on, and one "Designed by 8LX" tinted in the logo's blue
-  (`FreelancyLogo.blue`), orbiting it on a 118pt tilted ring, behind and in front of it, on a
+  earnings, `+$124` and so on, and one "By 8LX" in the logo's blue (`FreelancyLogo.blue`, tinted
+  glass over a 0.85 fill of it), orbiting it on a 104pt tilted ring, behind and in front of it, on a
   `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt), and, 20pt below them,
   "Create project" in plain glass (`DroppyGlassButtonStyle`, no tint), which starts the project
   flow. `widgetHeight` gives the menu `startScreenHeight` (186) then. `NoProjectScreen` (a timer or flow with nothing
