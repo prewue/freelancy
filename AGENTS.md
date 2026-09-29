@@ -237,10 +237,15 @@ https://getdroppy.app/droplet-developer-terms.
   a "Color" pill (`VividGlassButtonStyle` in the chosen colour; the title stays centred because
   `FlowNav` lays it over the row in a `ZStack`) that opens `.color`, "Choose color", the same way:
   `pendingColor` holds the choice, Confirm applies, Back discards, back to `.look`. `ColorStep`
-  is the icon wheel's row, centred (`WheelShape.orb`, pitch 56), each colour a `ColorOrb`: glass
-  tinted its colour over a 0.7 disc of the same colour. Back walks the steps and leaves from the first. Steps swap on
+  is the colour wheel (`WheelStyle.colors`), each colour a plain disc (`ColorOrb`). Back walks the steps and leaves from the first. Steps swap on
   `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
   the project colour over a stronger fill of the same colour.
+- **Start screen.** With no projects the menu is `StartScreen` instead: `StartEmblem` (a
+  stopwatch that breathes, the nine project colours orbiting it on a tilted ring, in front of and
+  behind it, on a `TimelineView`), "Freelancy", a line, and "Create project" (vivid glass in the
+  first project's suggested colour), which starts the project flow. `widgetHeight` gives the menu
+  `startScreenHeight` (124) then. `NoProjectScreen` (a timer or flow with nothing to show) is the
+  same screen. The paired view keeps `PairedEmptyView`.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
   window, and only the host can make it so (DroppyKit 1.10.0, hence `minAPI` 1.10.0; hosts on
   1.8.1, such as Playground 1.0.20, refuse the bundle). `FlowFocus.ensureKey` calls
@@ -260,29 +265,31 @@ https://getdroppy.app/droplet-developer-terms.
   claim first responder when their window is or becomes key, which is what asks for focus. While
   the flow is up the shelf is held open (`setHoldsOpen`) and the descriptor's `focusPolicy` is
   `.keyboardFocusable`, `.none` otherwise.
-- **Wheels.** `InfiniteWheel` + `WheelEngine` draw the icon, currency and colour pickers: an
-  endless ring (virtual indices wrap), the centred item chosen, scale and opacity falling with
-  distance, a fade at each edge. `WheelShape` holds each look (`.icon`, `.pill` for currencies,
-  `.orb` for colours), and every curve is smooth through the ring: the row gathers on a `tanh`
-  (full pitch at the centre), size and opacity fall on a Gaussian (flat at the top, so the centre
-  item eases rather than pops). Icons (up to 4pt, 150pt in) and colours (up to 6pt, 180pt in)
-  go soft towards the edges through `ProgressiveEdgeBlur`, a blur by screen position built from
-  public SwiftUI: the wheel is drawn four times (sharp and three rising radii), each copy masked
-  to a triangular weight across the edge band and added with `plusLighter`, so the weights sum
-  to one and the blur changes continuously with x. Only the sharp copy is hit-testable or visible
-  to VoiceOver. It is expensive, so it draws as little as it can: each blurred copy draws only the
-  items that reach into its part of the band (`EdgeBlurCopy.reach`, `InfiniteWheel.virtuals`),
-  and a cell reads `wheelBlurCopy` to drop its glass there (`ColorOrb` is a flat disc in a blurred
-  copy; glass in every copy was 13 glass views per copy per frame and cost most of the frame
-  rate).
-  There is no public variable blur (SDK 27 included), and a Metal `layerEffect` would need a
-  metallib, which `droppykit build` does not compile and the Store does not accept prebuilt.
-  The dark edge fade is 56pt on the icon and colour wheels, where the blur does the softening, and 96pt on the currency pills, which have no blur. The harness draws neither blur nor glass; look in the Playground. An earlier piecewise squeeze changed an item's speed at three
-  steps out, which read as items coasting in and then starting to scale. The harness draws neither the blur nor glass; look in the Playground. A click on an item more than one away glides there on an ease-out as long as the gap
-  (up to 0.75 s) instead of the settle spring, which leapt. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
-  that only consumes events while the pointer is over the wheel (snaps 90 ms after the last event,
-  a haptic tick per item), drag with momentum from the predicted end, click on any item, arrows.
-  The monitor is removed on disappear.
+- **Wheels** (`Wheel.swift`). One system for every picker on the shelf: an `InfiniteWheel` driven
+  by a `WheelEngine`, drawn to a `WheelStyle` preset (`.icons`, `.colors`, `.currencies`), edges
+  softened by `ProgressiveEdgeBlur`. A new wheel adds a preset (pitch, height, edge blur and its
+  band, fade) and brings its own cell; the curves are shared and must stay so, the wheels are
+  meant to feel identical. An endless ring (virtual indices wrap, six items a side), the centred
+  item chosen. Every curve is smooth through the ring: the row gathers on a `tanh` (full pitch at
+  the centre), size and opacity fall on a Gaussian (flat at the top, so the centre item eases
+  rather than pops); an earlier piecewise squeeze changed an item's speed three steps out, which
+  read as items coasting in and then starting to scale. `ProgressiveEdgeBlur` is a blur by screen
+  position from public SwiftUI: the wheel drawn four times (sharp and three rising radii), each
+  copy masked to a triangular weight across the edge band and added with `plusLighter`, so the
+  weights sum to one and the blur changes continuously with x; only the sharp copy is
+  hit-testable or visible to VoiceOver. There is no public variable blur (SDK 27 included), and a
+  Metal `layerEffect` would need a metallib, which `droppykit build` does not compile and the Store
+  does not accept prebuilt. It is expensive, so it draws as little as it can: each blurred copy
+  draws only the items that reach into its part of the band (`EdgeBlurCopy.reach`,
+  `InfiniteWheel.virtuals`), and a cell reads `wheelBlurCopy` to draw a cheap face there (a
+  currency pill drops its glass; glass in every copy cost most of the frame rate). The dark edge
+  fade is 56pt; the blur does the softening. The harness draws neither blur nor glass; look in
+  the Playground. A click on an item more than one away glides there on an ease-out as long as
+  the gap (up to 0.75 s) instead of the settle spring, which leapt. Input: trackpad and mouse
+  wheel through a local `.scrollWheel` monitor that only consumes events while the pointer is
+  over the wheel (snaps 90 ms after the last event, a haptic tick per item), drag with momentum
+  from the predicted end, click on any item, arrows. The monitor is removed on disappear. Colours
+  are plain 44pt discs (`ColorOrb`), currencies 64 by 32 glass pills (`CurrencyPill`).
 - **Icon.** `ProjectIcon` (16 SF Symbols, all in macOS 14) is stored on the project; a project
   saved before it existed, or one with an unknown value, decodes as the briefcase. It shows on the
   timer badge (solo and paired), on project cards and in the analytics tabs.
@@ -369,7 +376,7 @@ https://getdroppy.app/droplet-developer-terms.
   wings and the timer. The clock is the project's colour in the notch; on the timer the clock is
   primary and the money tertiary, as in the sketch.
 - **Files.** `TrackerModel.swift` (currency table, icons, colours, project, session, duration parsing),
-  `ProjectFlow.swift` (the create and edit flow, `CenterCarousel`),
+  `ProjectFlow.swift` (the create and edit flow and its steps), `Wheel.swift` (the wheel system),
   `FreelanceTrackerDroplet.swift` (lifecycle, store, screens, CSV export, live activity, HUD,
   descriptors), `TrackerWidget.swift` (every screen but analytics, the shared pieces, the paired
   view), `TrackerAnalytics.swift` (figures, CSV, the analytics screen), `RollingDigits.swift`,
