@@ -233,13 +233,12 @@ https://getdroppy.app/droplet-developer-terms.
   `droplet.draft` (`ProjectDraft`) and shows `.newProject` / `.editProject`; every step is the same
   174pt: nav row, an 80pt body, a button row with "or Press ⏎". Steps: `.name` → `.look` → `.rate`
   → `.currency` (opened from the rate step's top-right pill; `pendingCurrency` holds the choice,
-  Confirm applies, Back discards). `.look` is the icon wheel alone, centred; the colour is the
-  "Color" pill at the nav row's trailing end (`TintedGlassButtonStyle`, tinted in the chosen
-  colour; the title stays centred because `FlowNav` lays it over the row in a `ZStack`). The pill
-  blurs and fades the step (`FlowStep.colorOrigin` set) and lays `ColorArcPicker` over it: the
-  colours on an arc (`WheelShape.arc`), each a `ColorOrb`, a soft disc in a glass pill tinted the
-  same colour, 3pt in. The choice applies live; Return or Continue keeps it, Escape puts
-  `colorOrigin` back. Back walks the steps and leaves from the first. Steps swap on
+  Confirm applies, Back discards). `.look` is the icon wheel alone, centred; its nav row ends in
+  a "Color" pill (`VividGlassButtonStyle` in the chosen colour; the title stays centred because
+  `FlowNav` lays it over the row in a `ZStack`) that opens `.color`, "Choose color", the same way:
+  `pendingColor` holds the choice, Confirm applies, Back discards, back to `.look`. `ColorStep`
+  lays the colours on an arc (`WheelShape.arc`), each a `ColorOrb`: glass tinted its colour over a
+  0.7 disc of the same colour. Back walks the steps and leaves from the first. Steps swap on
   `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
   the project colour over a stronger fill of the same colour.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
@@ -264,8 +263,10 @@ https://getdroppy.app/droplet-developer-terms.
 - **Wheels.** `InfiniteWheel` + `WheelEngine` draw the icon, currency and colour pickers: an
   endless ring (virtual indices wrap), the centred item chosen, scale and opacity falling with
   distance, a fade at each edge. `WheelShape` holds each look: `.icon` and `.pill` are flat with a
-  96pt fade and six items a side; `.arc` lifts items on a hyperbola (`lift`), shows four a side
-  (each colour once) and fades 40pt. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
+  96pt fade and six items a side; `.arc` lifts items on a hyperbola (`lift`, the curve 14pt below
+  the middle so its ends stay inside the mask), shows four a side (each colour once) and fades
+  40pt. A click on an item more than one away glides there on an ease-out as long as the gap
+  (up to 0.75 s) instead of the settle spring, which leapt. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
   that only consumes events while the pointer is over the wheel (snaps 90 ms after the last event,
   a haptic tick per item), drag with momentum from the predicted end, click on any item, arrows.
   The monitor is removed on disappear.
