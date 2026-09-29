@@ -265,7 +265,7 @@ https://getdroppy.app/droplet-developer-terms.
   distance, a fade at each edge. `WheelShape` holds each look (`.icon`, `.pill` for currencies,
   `.orb` for colours), and every curve is smooth through the ring: the row gathers on a `tanh`
   (full pitch at the centre), size and opacity fall on a Gaussian (flat at the top, so the centre
-  item eases rather than pops). Icons (up to 4pt, 120pt in) and colours (up to 6pt, 150pt in)
+  item eases rather than pops). Icons (up to 4pt, 150pt in) and colours (up to 6pt, 180pt in)
   go soft towards the edges through `ProgressiveEdgeBlur`, a blur by screen position built from
   public SwiftUI: the wheel is drawn four times (sharp and three rising radii), each copy masked
   to a triangular weight across the edge band and added with `plusLighter`, so the weights sum
@@ -277,7 +277,7 @@ https://getdroppy.app/droplet-developer-terms.
   rate).
   There is no public variable blur (SDK 27 included), and a Metal `layerEffect` would need a
   metallib, which `droppykit build` does not compile and the Store does not accept prebuilt.
-  The harness draws neither blur nor glass; look in the Playground. An earlier piecewise squeeze changed an item's speed at three
+  The dark edge fade is 56pt on the icon and colour wheels, where the blur does the softening, and 96pt on the currency pills, which have no blur. The harness draws neither blur nor glass; look in the Playground. An earlier piecewise squeeze changed an item's speed at three
   steps out, which read as items coasting in and then starting to scale. The harness draws neither the blur nor glass; look in the Playground. A click on an item more than one away glides there on an ease-out as long as the gap
   (up to 0.75 s) instead of the settle spring, which leapt. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
   that only consumes events while the pointer is over the wheel (snaps 90 ms after the last event,
