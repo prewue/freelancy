@@ -233,7 +233,13 @@ https://getdroppy.app/droplet-developer-terms.
   `droplet.draft` (`ProjectDraft`) and shows `.newProject` / `.editProject`; every step is the same
   174pt: nav row, an 80pt body, a button row with "or Press ⏎". Steps: `.name` → `.look` → `.rate`
   → `.currency` (opened from the rate step's top-right pill; `pendingCurrency` holds the choice,
-  Confirm applies, Back discards). Back walks the steps and leaves from the first. Steps swap on
+  Confirm applies, Back discards). `.look` is the icon wheel alone, centred; the colour is the
+  "Color" pill at the nav row's trailing end (`TintedGlassButtonStyle`, tinted in the chosen
+  colour; the title stays centred because `FlowNav` lays it over the row in a `ZStack`). The pill
+  blurs and fades the step (`FlowStep.colorOrigin` set) and lays `ColorArcPicker` over it: the
+  colours on an arc (`WheelShape.arc`), each a `ColorOrb`, a soft disc in a glass pill tinted the
+  same colour, 3pt in. The choice applies live; Return or Continue keeps it, Escape puts
+  `colorOrigin` back. Back walks the steps and leaves from the first. Steps swap on
   `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
   the project colour over a stronger fill of the same colour.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
@@ -247,13 +253,19 @@ https://getdroppy.app/droplet-developer-terms.
   `@FocusState` did not make the field first responder inside the notch panel (the Playground
   logged `noResponder(keyDown:)` beeps while the panel was key), so the flow uses AppKit directly. `FlowTextField` wraps an `NSTextField` (centred text and
   placeholder, Return submits, Escape goes back through the delegate); `FlowKeyReceiver` is a
-  zero-hit-test `NSView` that takes first responder on the other steps and turns Return, Escape and
-  the arrows into callbacks. Both claim first responder when their window is or becomes key. While
+  zero-hit-test `NSView` on the other steps that turns Return, Escape and the arrows into
+  callbacks through a local `.keyDown` monitor, not as first responder: a click on a step (a
+  colour, an icon, the slider) hands first responder to the SwiftUI hosting view, and when the
+  receiver had to win it back Return died once its retries ran out. Only the newest receiver
+  answers (two steps overlap while they swap), and a field editor keeps its own keys. Both still
+  claim first responder when their window is or becomes key, which is what asks for focus. While
   the flow is up the shelf is held open (`setHoldsOpen`) and the descriptor's `focusPolicy` is
   `.keyboardFocusable`, `.none` otherwise.
-- **Wheels.** `InfiniteWheel` + `WheelEngine` draw the icon and currency pickers: an endless ring
-  (virtual indices wrap), the centred item chosen, scale and opacity falling with distance, a
-  96pt fade at each edge. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
+- **Wheels.** `InfiniteWheel` + `WheelEngine` draw the icon, currency and colour pickers: an
+  endless ring (virtual indices wrap), the centred item chosen, scale and opacity falling with
+  distance, a fade at each edge. `WheelShape` holds each look: `.icon` and `.pill` are flat with a
+  96pt fade and six items a side; `.arc` lifts items on a hyperbola (`lift`), shows four a side
+  (each colour once) and fades 40pt. Input: trackpad and mouse wheel through a local `.scrollWheel` monitor
   that only consumes events while the pointer is over the wheel (snaps 90 ms after the last event,
   a haptic tick per item), drag with momentum from the predicted end, click on any item, arrows.
   The monitor is removed on disappear.
@@ -290,10 +302,12 @@ https://getdroppy.app/droplet-developer-terms.
 - **Session rename.** The pencil on a session card calls `startRenamingSession`; `.renameSession`
   shows `SessionRenameScreen` (same field, nav and "or Press ⏎" row as the project flow, Save in
   the project colour), backed by `sessionRename`. It counts as a typing flow for the shelf hold.
-- **Card sizes.** Project cards are 112pt tall with 10pt between name, figure and the bottom row
-  and 12pt side padding; session cards stay 90pt with 14pt side padding; 12pt between cards. The
-  Projects screen is therefore taller than the timer and the Sessions screen. Hover controls sit
-  over the card and never move its content.
+- **Card sizes.** Projects and Sessions come to the timer's height (`cardRowHeight` 90 for the
+  row), so moving between the three never resizes the shelf. `CardRow` and the cards take the
+  height the screen has left and spread their three rows with flexible gaps (at least 2pt), so a
+  solo island card, which the host does not inset, just gets roomier cards. Project cards pad 8
+  by 12, session cards 8 by 14; 12pt between cards. Hover controls sit over the card and never
+  move its content.
 - **Start new sessions running.** The `startsSessionsRunning` preference (default on). Off, a new
   session is created paused, nothing else is paused, and no HUD shows.
 - **Show me the money.** The `moneyFirst` preference (Settings, Shelf) swaps the two figures on
