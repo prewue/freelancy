@@ -249,8 +249,9 @@ https://getdroppy.app/droplet-developer-terms.
   (`ClearGlassButtonStyle`: `.glassEffect(.clear.interactive())` on macOS 26+, Droppy's glass
   control before; a deliberate step off the kit's button styles, so the beam reads through) with
   `EdgeBeam` behind it: on hover a saturated blue and white beam runs round a capsule of the
-  button's size, a sharp line and two glows added with `plusLighter` (its `TimelineView` is
-  paused while not hovered). It starts the project flow. `widgetHeight` gives the menu
+  button's size, a sharp line and two glows added with `plusLighter`, plus an outer glow (the
+  beam blurred wide and not clipped) that spills past the button and travels with it (its
+  `TimelineView` is paused while not hovered). The button's label is pure white. It starts the project flow. `widgetHeight` gives the menu
   `startScreenHeight` (195) then. `NoProjectScreen` (a timer or flow with nothing
   to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: the logo turning (`TurningLogo`, no orbit,
   which is too wide for a grouped card) and "Open Freelancy", which shows the widget alone (`revealAlone`, `host.shelf.open(revealing:)`).
