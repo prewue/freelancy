@@ -241,14 +241,20 @@ https://getdroppy.app/droplet-developer-terms.
   `DroppyTransition.element`. Create / Save is `VividGlassButtonStyle`: the glass chrome tinted in
   the project colour over a stronger fill of the same colour.
 - **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
-  `FreelancyLogo` (the droplet's blue logo drawn in SwiftUI so its dots and hands can move),
-  "Welcome to Freelancy" (20pt), two lines (13pt), and "Create project" in plain glass
-  (`DroppyGlassButtonStyle`, no tint), which starts the project flow. `widgetHeight` gives the
-  menu `startScreenHeight` then. `NoProjectScreen` (a timer or flow with nothing to show) is the
-  same screen; the paired view keeps `PairedEmptyView`. TEMPORARY: six candidate animations
-  (`StartAnimation`: cascade, clock sweep, dot wave, assemble, tilt and shine, colour orbit)
-  cycle on a click on the logo, named in a caption under the button; once one is chosen, drop
-  the rest, the caption and the click, and take the caption's 21pt off `startScreenHeight`.
+  `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
+  earnings, `+$124` and so on, orbiting it on a tilted ring, behind and in front of it, on a
+  `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt), and "Create project" in
+  plain glass (`DroppyGlassButtonStyle`, no tint), which starts the project flow. `widgetHeight`
+  gives the menu `startScreenHeight` (178) then. `NoProjectScreen` (a timer or flow with nothing
+  to show) is the same screen; the paired view keeps `PairedEmptyView`.
+- **Logo and icon.** `app-logo.svg` at the package root is the artwork as drawn in Figma. The
+  droplet icon (`FreelanceTracker.icon`) is three clean SVG layers made from it, because actool
+  cannot draw the Figma export's `foreignObject` conic gradients or its blur filter: `background`
+  (the sky gradient, the glow as a radial gradient), `dial` (the frosted face, the rim, sixteen
+  dots with the conic's opacity baked in per dot: 0.98 at twelve, 0.15 just past it, rising to
+  0.92 round the dial) and `hands` (glass on). `FreelancyLogo` draws the same artwork in SwiftUI
+  from the SVG's own measures on its 1224 canvas, so the long hand can turn; `FreelancyLogo.light`
+  is that conic, taken relative to the hand, so the lit dots trail it.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
   window, and only the host can make it so (DroppyKit 1.10.0, hence `minAPI` 1.10.0; hosts on
   1.8.1, such as Playground 1.0.20, refuse the bundle). `FlowFocus.ensureKey` calls
