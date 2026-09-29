@@ -267,9 +267,14 @@ https://getdroppy.app/droplet-developer-terms.
   (full pitch at the centre), size and opacity fall on a Gaussian (flat at the top, so the centre
   item eases rather than pops). Icons (up to 4pt, 120pt in) and colours (up to 6pt, 150pt in)
   go soft towards the edges through `ProgressiveEdgeBlur`, a blur by screen position built from
-  public SwiftUI: the wheel is drawn five times at rising radii, each copy masked to a triangular
-  weight across the edge band and added with `plusLighter`, so the weights sum to one and the
-  blur changes continuously with x. Only the sharp copy is hit-testable or visible to VoiceOver.
+  public SwiftUI: the wheel is drawn four times (sharp and three rising radii), each copy masked
+  to a triangular weight across the edge band and added with `plusLighter`, so the weights sum
+  to one and the blur changes continuously with x. Only the sharp copy is hit-testable or visible
+  to VoiceOver. It is expensive, so it draws as little as it can: each blurred copy draws only the
+  items that reach into its part of the band (`EdgeBlurCopy.reach`, `InfiniteWheel.virtuals`),
+  and a cell reads `wheelBlurCopy` to drop its glass there (`ColorOrb` is a flat disc in a blurred
+  copy; glass in every copy was 13 glass views per copy per frame and cost most of the frame
+  rate).
   There is no public variable blur (SDK 27 included), and a Metal `layerEffect` would need a
   metallib, which `droppykit build` does not compile and the Store does not accept prebuilt.
   The harness draws neither blur nor glass; look in the Playground. An earlier piecewise squeeze changed an item's speed at three
