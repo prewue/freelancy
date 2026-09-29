@@ -20,15 +20,18 @@ runs.
   cards are glass in the project's colour. Hover for analytics, edit, rename
   and delete; a delete asks first, right on the shelf.
 - **New project.** A few short steps on the shelf: a name, an icon and its
-  colour, then an hourly rate and its currency. Icons, colours and currencies
-  are picked on wheels you scroll, drag or click, or with the arrow keys; Return
-  moves on, Escape goes back.
+  colour, then an hourly rate on a ruler and its currency (searchable). Icons,
+  colours and currencies are picked on wheels you scroll, drag or click, or with
+  the arrow keys; Return moves on, Escape goes back.
+- **New sessions.** The plus asks for a name first (it can be switched off),
+  and a new session stops the one running before it.
 - **Analytics.** One project at a time: the totals, two weeks of time and
   money as bars (hover a bar for that day), and a CSV of that project's
   sessions saved to Downloads.
-- **Notch.** While a session runs, the clock in the project's colour and the
-  amount earned sit beside the notch and tick every second, only the changed
-  digit moving. A brief strip can confirm a start or a pause.
+- **Notch.** While a session runs, the amount earned and the time sit beside
+  the notch (the time in the project's colour; Show me the money swaps them)
+  and tick every second, only the changed digit moving. A brief strip can
+  confirm a start or a pause.
 - **Settings.** Defaults for new projects, project names, colours, icons,
   rates and currencies, session names and lengths, and the shelf's questions.
 

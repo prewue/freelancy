@@ -415,9 +415,10 @@ https://getdroppy.app/droplet-developer-terms.
   the shelf opened and closed), so no button, hold or hover action can work there; `isInteractive`
   only widens the wings to 120pt. Droppy 16.0.1 also never reads `preferredWidth` (not among its
   imported DroppyKit symbols), so the wings keep the host's fixed widths. Both wings are
-  `CompactFigureView`: the amount subtle on the left (`notchSurfaceSecondaryText`) and the time
+  `CompactFigureView`: the amount subtle on the left (white at 45%) and the time
   in the project's colour on the right; "Show me the money" (`moneyFirst`) swaps them. Both roll
-  on `RollingDigits` and dim while paused. The row follows `notchSession`: the running session, or
+  on `RollingDigits` in the same type (12pt medium rounded), each centred in its wing, and dim
+  while paused. The row follows `notchSession`: the running session, or
   the last one while it is paused (`notchSessionID`, not persisted), since the docs say never to
   unpublish for a pause; it goes when another session starts, the session or project goes, or
   Droppy relaunches.
