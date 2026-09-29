@@ -248,9 +248,10 @@ https://getdroppy.app/droplet-developer-terms.
   "Create project" in plain glass (`DroppyGlassButtonStyle`, no tint), which starts the project
   flow. `widgetHeight` gives the menu `startScreenHeight` (186) then. `NoProjectScreen` (a timer or flow with nothing
   to show) is the same screen; the paired view keeps `PairedEmptyView`.
-- **Logo and icon.** `app-logo.svg` at the package root is the artwork as drawn in Figma. The
-  droplet icon (`FreelanceTracker.icon`) is three clean SVG layers made from it, because actool
-  cannot draw the Figma export's `foreignObject` conic gradients or its blur filter: `background`
+- **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
+  it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) is three clean SVG
+  layers made from it, because actool cannot draw the Figma export's `foreignObject` conic
+  gradients or its blur filter: `background`
   (the sky gradient, the glow as a radial gradient), `dial` (the frosted face, the rim, sixteen
   dots with the conic's opacity baked in per dot: 0.98 at twelve, 0.15 just past it, rising to
   0.92 round the dial) and `hands` (glass on). `FreelancyLogo` draws the same artwork in SwiftUI
