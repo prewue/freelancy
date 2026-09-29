@@ -241,8 +241,10 @@ https://getdroppy.app/droplet-developer-terms.
   `DroppyTransition.element`. `.rate` (`RateStep`) is the amount in the project's colour at 26pt
   (click it to type an exact one) over a `RulerWheel` (whole amounts 1 to 500; arrows step 1,
   Shift 10; a typed amount glides the ruler to it). `.currency` (`CurrencyStep`) has a search in
-  the nav row (`NavSearch`: a 28pt glass disc that springs open across the row on
-  `DroppyAnimation.controlMorph` into a left-aligned `FlowTextField`, the title blurring out; it
+  the nav row (`NavSearch`: a 28pt glass disc that opens across the row in beats: the title fades
+  out, the disc springs open (response 0.48, damping 0.68: `controlMorph`'s 0.9 barely
+  overshoots), then the magnifier and a SwiftUI placeholder come in out of a blur over a
+  left-aligned `FlowTextField`; closing runs backwards; it
   matches code, name and symbol; Return confirms, Escape closes) and shows its matches as a
   bounded row (`wraps: false`); the codes are text only and pass under one glass lens held in
   the middle, so the selection moves with the scroll. Create / Save is plain glass
@@ -297,7 +299,7 @@ https://getdroppy.app/droplet-developer-terms.
   endless ring when true and a row that stops at its ends when false (clamped, rubber-banding
   under a drag); `InfiniteWheel(wraps:)` passes it and re-points the engine when its items change
   (a search narrowing them). `RulerWheel` is a bounded engine drawn as tick marks: the middle tick
-  tall and tinted, two either side fainter and shorter, heights and tint on smooth curves of the
+  tall and tinted, two either side tinted fainter at the grey ticks' height, heights and tint on smooth curves of the
   distance, with the same fade and edge blur. An `InfiniteWheel` driven
   by a `WheelEngine`, drawn to a `WheelStyle` preset (`.icons`, `.colors`, `.currencies`), edges
   softened by `ProgressiveEdgeBlur`. A new wheel adds a preset (pitch, height, edge blur and its
