@@ -344,12 +344,13 @@ https://getdroppy.app/droplet-developer-terms.
 - **Session rename.** The pencil on a session card calls `startRenamingSession`; `.renameSession`
   shows `SessionRenameScreen` (same field, nav and "or Press ⏎" row as the project flow, Save in
   the project colour), backed by `sessionRename`. It counts as a typing flow for the shelf hold.
-- **Card sizes.** Projects and Sessions come to the timer's height (`cardRowHeight` 90 for the
-  row), so moving between the three never resizes the shelf. `CardRow` and the cards take the
-  height the screen has left and spread their three rows with flexible gaps (at least 2pt), so a
-  solo island card, which the host does not inset, just gets roomier cards. Project cards pad 8
-  by 12, session cards 8 by 14; 12pt between cards. Hover controls sit over the card and never
-  move its content.
+- **Card sizes.** Projects and Sessions come to the timer's height (`cardRowHeight` 100 for the
+  row, `timerRowHeight` 68 for the timer's clock row: all three 152), so moving between them
+  never resizes the shelf. `CardRow` and the cards take the height the screen has left and
+  spread their three rows with flexible gaps, so a solo island card, which the host does not
+  inset, just gets roomier cards. Project cards pad 10 by 12 with at least 6pt between name,
+  figure and bottom row; session cards pad 8 by 12; 12pt between cards. Hover controls sit over
+  the card and never move its content.
 - **Start new sessions running.** The `startsSessionsRunning` preference (default on). Off, a new
   session is created paused, nothing else is paused, and no HUD shows. Start on a project with no
   session still starts one running (`newSession(on:running: true)`): Start means start.
