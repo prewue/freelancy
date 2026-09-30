@@ -252,24 +252,17 @@ https://getdroppy.app/droplet-developer-terms.
   (`VividGlassButtonStyle` with no accent); the colour step's Confirm keeps the chosen colour.
 - **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
   `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
-  earnings, `+$124` and so on, and one "By 8LX" in the logo's blue (`FreelancyLogo.blue`, tinted
-  glass over a 0.85 fill of it), orbiting it on a 104pt tilted ring, behind and in front of it, on a
-  `TimelineView`), "Welcome to Freelancy" (20pt), two lines (13pt, 5pt line spacing, white
-  fading to 25% at both ends), and, 20pt below them, "Create project" in clear glass
-  (`ClearGlassButtonStyle`: `.glassEffect(.clear.interactive())` on macOS 26+, Droppy's glass
-  control before; a deliberate step off the kit's button styles, so the beam reads through) with
-  `EdgeBeam` behind it: on hover a saturated blue and white beam runs round a capsule of the
-  button's size (otherwise it is a plain button), a sharp line and two glows added with `plusLighter`, plus an outer glow (the
-  beam blurred 9 over a 10pt band, not clipped, fading to nothing 12pt below the button so the
-  widget's edge never cuts it, even alone on the island where the host adds no inset; the
-  harness draws it only inside the button, so check it in the Playground) that spills past the button and travels with it (its
-  `TimelineView` is paused while not hovered; `StartScreen` keeps the beam's clock,
-  `beamTurns` and `beamRunningSince`, and moves it in the hover handler itself, so the beam
-  picks up where it stopped instead of jumping to where the wall clock would put it). 14pt under the button keep the widget's rectangle
-  from clipping that glow. The button's label is pure white. It starts the project flow. `widgetHeight` gives the menu
-  `startScreenHeight` (209) then. `NoProjectScreen` (a timer or flow with nothing
-  to show) is the same screen; the grouped row shows `PairedEmptyView`, centred: the logo turning (`TurningLogo`, no orbit,
-  which is too wide for a grouped card) and "Open Freelancy", which shows the widget alone (`showWidgetAlone`, `host.shelf.open(revealing:)`).
+  earnings, `+$124` and so on, and one "By 8LX" in the logo's blue, orbiting it on a tilted ring,
+  behind and in front of it, on a `TimelineView`), "Welcome to Freelancy" (20pt), two lines
+  (13pt, 5pt line spacing, the primary text colour fading to 25% at both ends), and "Create
+  project" as a plain `DroppyGlassButtonStyle` button, which starts the project flow. The review
+  of !41 asked for no effect on the button (an animated beam around it was removed) and for the
+  logo to carry the welcome. `widgetHeight` gives the menu `startScreenHeight` (195) then.
+- **Colours on the shelf.** The shelf can be light (the island follows the appearance), so
+  nothing on it is hard-coded white: text uses `AdaptiveColors.notchSurface*Text`, fills
+  `notchSurfaceCardFill` (the tokens resolve in Droppy's own DroppyKit at run time). The only
+  whites left are the logo's own artwork on its opaque blue squircle, like the icon, and the
+  "By 8LX" text on its saturated blue pill.
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
   it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) is three clean SVG
   layers made from it, because actool cannot draw the Figma export's `foreignObject` conic
