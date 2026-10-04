@@ -361,6 +361,9 @@ https://getdroppy.app/droplet-developer-terms.
   before starting a new session" on (default now off) the page follows the question. A grouped
   row has no room for it, so there the session starts at once; Start on a project with no
   session also starts at once. The page counts as a typing flow for the shelf hold.
+- **Rates.** Each `TrackerCurrency` has a `rateStep` (1 for dollars and euros up to 1000 for won)
+  so the ruler's 500 steps and the Settings slider cover a normal hourly rate in any currency; an
+  exact rate can always be typed.
 - **Card sizes.** Projects and Sessions come to the timer's height (`cardRowHeight` 100 for the
   row, `timerRowHeight` 68 for the timer's clock row: all three 152), so moving between them
   never resizes the shelf. `CardRow` and the cards take the height the screen has left and
@@ -403,18 +406,13 @@ https://getdroppy.app/droplet-developer-terms.
   `.contentTransition(.numericText())` and bars animate on their values, so switching project
   rolls everything to the new numbers. A project card's hover controls are analytics, edit,
   delete; analytics opens on that project through `analyticsProjectID`.
-- **Notch row (live activity).** Not interactive: Droppy opens the shelf on hover or click and
-  hides the row, and the row gets no pointer events at all (a hover probe logged nothing while
-  the shelf opened and closed), so no button, hold or hover action can work there; `isInteractive`
-  only widens the wings to 120pt. Droppy 16.0.1 also never reads `preferredWidth` (not among its
-  imported DroppyKit symbols), so the wings keep the host's fixed widths. Both wings are
-  `CompactFigureView`: the amount subtle on the left (white at 45%) and the time
-  in the project's colour on the right; "Show me the money" (`moneyFirst`) swaps them. Both roll
-  on `RollingDigits` in the same type (12pt medium rounded), each centred in its wing, and dim
-  while paused. The row follows `notchSession`: the running session, or
-  the last one while it is paused (`notchSessionID`, not persisted), since the docs say never to
-  unpublish for a pause; it goes when another session starts, the session or project goes, or
-  Droppy relaunches.
+- **Notch row (live activity).** Published only while a session runs; a paused session gives the
+  notch back (review of !41), and it is resumed from the shelf widget. Not interactive: Droppy
+  opens the shelf on hover or click and the row gets no pointer events, so no button, hold or
+  hover action can work there; Droppy 16.0.1 never reads `preferredWidth`, so the wings keep the
+  host's fixed widths. Both wings are `CompactFigureView`: the amount subtle on the left (primary
+  text at 45%) and the time in the project's colour on the right; "Show me the money"
+  (`moneyFirst`) swaps them. Same type (12pt medium rounded), each centred in its wing.
 - **Colour.** `ProjectColor` (nine cases) is stored on the project; a project saved before it
   existed, or with an unknown value, decodes as cyan. It paints the badge, the name on a project card, the Sessions title,
   the analytics tab and earnings bars, and the time in the notch row's trailing wing.
