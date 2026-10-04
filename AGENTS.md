@@ -453,9 +453,14 @@ https://getdroppy.app/droplet-developer-terms.
   to that case, and for `editProject` also set `editingProjectID`. Never sed every
   `screen = .x` line: `open`, `createProject`, `newSession` and `select` set `.timer` at the same
   indent, and rewriting those sends every action back to the menu.
-- **Tests.** `Tests/FreelanceTrackerTests` covers the clock strings and duration parsing, money
-  formatting, decoding projects saved by older versions, session durations and the CSV. Run
-  `swift test` with `DEVELOPER_DIR` set as below; the droplet build ignores the test target.
+- **Tests.** `Tests/` is a package of its own (`Tests/Package.swift`, the droplet by path `..`),
+  because the Store refuses a `.testTarget` in a droplet's Package.swift and a `Tests/` folder in
+  its droplet folder. `Tests/Tests/FreelanceTrackerTests` covers the clock strings and duration
+  parsing, money formatting, decoding projects saved by older versions, session durations and the
+  CSV. Run `swift test` from `Tests/` with `DEVELOPER_DIR` set as below. `.gitignore` lists
+  `Tests/`, `Package.resolved` and `.claude/`: `droppykit submit` copies the whole package into the
+  Store checkout and stages only what `.gitignore` lets through, so they stay out of the Store. The
+  test files are tracked here anyway; add a new one with `git add -f`.
 - **Toolchain.** The SDK needs Swift 6.2 (Xcode 26+). `xcode-select` here points at Command
   Line Tools (Swift 6.0.3), so `.mcp.json` and `.cursor/mcp.json` pass
   `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer`; export the same in a shell before

@@ -67,10 +67,11 @@ and needs Swift 6.2 (Xcode 26 or later).
 droppykit build      # the bundle
 droppykit validate   # the checks a submission runs
 droppykit run        # the harness window, one page per surface
-swift test           # the model, formatting and CSV tests
 ```
 
-In the source repository, `AGENTS.md` is the brief for coding agents, and
+In the source repository, `Tests/` is a package of its own with the model,
+formatting and CSV tests (`cd Tests && swift test`), `AGENTS.md` is the brief
+for coding agents, and
 `.mcp.json` and `.cursor/mcp.json` connect the DroppyKit MCP server for Claude
 Code and Cursor.
 

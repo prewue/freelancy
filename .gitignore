@@ -2,3 +2,9 @@
 .swiftpm/
 .DS_Store
 shots/
+.claude/
+# Not part of the droplet: droppykit submit sends the Store only what this
+# file lets through. The tests are tracked in the source repository anyway;
+# add a new test file with `git add -f`.
+Tests/
+Package.resolved
