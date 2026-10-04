@@ -265,12 +265,13 @@ https://getdroppy.app/droplet-developer-terms.
   `notchSurfaceCardFill` (the tokens resolve in Droppy's own DroppyKit at run time). The only
   whites left are the logo's own artwork on its opaque blue squircle, like the icon.
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
-  it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) is three clean SVG
-  layers made from it, because actool cannot draw the Figma export's `foreignObject` conic
-  gradients or its blur filter: `background`
-  (the sky gradient, the glow as a radial gradient), `dial` (the frosted face, the rim, sixteen
-  dots with the conic's opacity baked in per dot: 0.98 at twelve, 0.15 just past it, rising to
-  0.92 round the dial) and `hands` (glass on). `FreelancyLogo` draws the same artwork in SwiftUI
+  it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) follows Droppy's
+  icon language (review of !41): the `system-dark` tile, like Teleprompter and Thaw, with three
+  clean SVG layers made from the artwork (actool cannot draw the Figma export's `foreignObject`
+  conic gradients or its blur filter): `face` (the dial in the accent #5B3FFF, a light-to-deep
+  gradient, glass on), `dots` (sixteen white dots with the conic's opacity baked in per dot:
+  0.98 at twelve, 0.15 just past it, rising to 0.92 round the dial) and `hands` (white, glass
+  on). The welcome screen's `FreelancyLogo` still draws the earlier blue tile artwork in SwiftUI
   from the SVG's own measures on its 1224 canvas, so the long hand can turn; `FreelancyLogo.light`
   is that conic, taken relative to the hand, so the lit dots trail it.
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
