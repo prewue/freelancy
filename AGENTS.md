@@ -254,7 +254,7 @@ https://getdroppy.app/droplet-developer-terms.
   the glass, `VividGlassButtonStyle`, was removed) and for "color" in every visible string.
 - **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
   `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
-  earnings, `+$124` and so on, and one "By 8LX" tinted in the logo's blue, all `droppyGlassControlChrome` with no fill of our own, orbiting it on a tilted ring,
+  earnings, `+$124` and so on, and one "By 8LX" tinted in the accent (#5B3FFF), all `droppyGlassControlChrome` with no fill of our own, orbiting it on a tilted ring,
   behind and in front of it, on a `TimelineView`), "Welcome to Freelancy" (20pt), two lines
   (13pt, 5pt line spacing, the secondary text colour; the review of !41 asked for no gradient), and "Create
   project" as a plain `DroppyGlassButtonStyle` button, which starts the project flow. The review
@@ -271,9 +271,12 @@ https://getdroppy.app/droplet-developer-terms.
   conic gradients or its blur filter): `face` (the dial in the accent #5B3FFF, a light-to-deep
   gradient, glass on), `dots` (sixteen white dots with the conic's opacity baked in per dot:
   0.98 at twelve, 0.15 just past it, rising to 0.92 round the dial) and `hands` (white, glass
-  on). The welcome screen's `FreelancyLogo` still draws the earlier blue tile artwork in SwiftUI
-  from the SVG's own measures on its 1224 canvas, so the long hand can turn; `FreelancyLogo.light`
-  is that conic, taken relative to the hand, so the lit dots trail it.
+  on). `FreelancyLogo` draws the same icon in SwiftUI from the SVG's own measures on its 1224
+  canvas, so the long hand can turn: the tile as the compiled icon renders `system-dark` (white
+  0.19 to 0.08, top to bottom), the face in `FreelancyLogo.accent` with a light glass edge and a
+  soft shadow, white dots and hands; `dotBrightness` is the conic, taken relative to the hand, so
+  the lit dots trail it. It is the only copy of the logo in the code: the welcome screen
+  (`StartEmblem`) and the grouped empty state (`PairedEmptyView`, through `TurningLogo`).
 - **Keyboard in the flow.** Typing needs Droppy's notch panel (`NotchWindow`) to be the key
   window, and only the host can make it so (DroppyKit 1.10.0, hence `minAPI` 1.10.0; hosts on
   1.8.1, such as Playground 1.0.20, refuse the bundle). `FlowFocus.ensureKey` calls
