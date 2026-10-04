@@ -4,7 +4,7 @@ Bill by the hour and watch the money tick in the notch.
 
 Freelancy is a Droplet for [Droppy](https://getdroppy.app), the Dynamic Island
 and shelf for Mac. It is a small time and money meter for hourly work: projects
-with a rate, a currency and a colour, pausable sessions inside them, and the
+with a rate, a currency and a color, pausable sessions inside them, and the
 clock and the amount earned so far sitting beside the notch while a session
 runs.
 
@@ -17,11 +17,11 @@ runs.
   project's badge above the clock switches projects; asking first while
   another project's session runs.
 - **Projects and sessions.** Cards in a row that scrolls sideways. Project
-  cards are glass in the project's colour. Hover for analytics, edit, rename
+  cards are glass in the project's color. Hover for analytics, edit, rename
   and delete; a delete asks first, right on the shelf.
 - **New project.** A few short steps on the shelf: a name, an icon and its
-  colour, then an hourly rate on a ruler and its currency (searchable). Icons,
-  colours and currencies are picked on wheels you scroll, drag or click, or with
+  color, then an hourly rate on a ruler and its currency (searchable). Icons,
+  colors and currencies are picked on wheels you scroll, drag or click, or with
   the arrow keys; Return moves on, Escape goes back.
 - **New sessions.** The plus asks for a name first (it can be switched off),
   and a new session stops the one running before it.
@@ -29,10 +29,10 @@ runs.
   money as bars (hover a bar for that day), and a CSV of that project's
   sessions saved to Downloads.
 - **Notch.** While a session runs, the amount earned and the time sit beside
-  the notch (the time in the project's colour; Show me the money swaps them)
+  the notch (the time in the project's color; Show me the money swaps them)
   and tick every second, only the changed digit moving. A brief strip can
   confirm a start or a pause.
-- **Settings.** Defaults for new projects, project names, colours, icons,
+- **Settings.** Defaults for new projects, project names, colors, icons,
   rates and currencies, session names and lengths, and the shelf's questions.
 
 Typing on the shelf asks Droppy for keyboard focus, which Droppy gives a

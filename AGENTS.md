@@ -231,10 +231,10 @@ https://getdroppy.app/droplet-developer-terms.
   discs are `navHeight` (28pt).
 - **Project flow** (`ProjectFlow.swift`). `startNewProject()` or `edit(id)` fills
   `droplet.draft` (`ProjectDraft`) and shows `.newProject` / `.editProject`; every step is the same
-  174pt: nav row, an 80pt body, a button row with "or Press ⏎". Steps: `.name` → `.look` → `.rate`
+  174pt: nav row, an 80pt body, a button row with "or press ⏎". Steps: `.name` → `.look` → `.rate`
   → `.currency` (opened from the rate step's top-right pill; `pendingCurrency` holds the choice,
   Confirm applies, Back discards). `.look` is the icon wheel alone, centred; its nav row ends in
-  a "Color" pill (`VividGlassButtonStyle` in the chosen colour; the title stays centred because
+  a "Color" pill (`DroppyGlassButtonStyle(fill: .tinted(colour))`; the title stays centred because
   `FlowNav` lays it over the row in a `ZStack`) that opens `.color`, "Choose color", the same way:
   `pendingColor` holds the choice, Confirm applies, Back discards, back to `.look`. `ColorStep`
   is the colour wheel (`WheelStyle.colors`), each colour a plain disc (`ColorOrb`). Back walks the steps and leaves from the first. Steps swap on
@@ -242,27 +242,28 @@ https://getdroppy.app/droplet-developer-terms.
   (click it to type an exact one) over a `RulerWheel` (whole amounts 1 to 500; arrows step 1,
   Shift 10; a typed amount glides the ruler to it). `.currency` (`CurrencyStep`) has a search in
   the nav row (`NavSearch`: a 28pt glass disc that opens across the row in beats: the title fades
-  out, the disc springs open (response 0.46, damping 0.8: `controlMorph`'s 0.9 barely
-  overshoots) with the magnifier riding from the middle to the leading edge (leading-aligned,
+  out, the disc springs open on `DroppyAnimation.tabSelect` (the review of
+  !41 asked for a preset; it is the nearest to the 0.46 / 0.8 spring it replaced) with the magnifier riding from the middle to the leading edge (leading-aligned,
   centred in the disc by its padding), then 260 ms in a SwiftUI placeholder and the close
   button come in out of a blur over a left-aligned `FlowTextField`; closing runs backwards; it
   matches code, name and symbol; Return confirms, Escape closes) and shows its matches as a
   bounded row (`wraps: false`); the codes are text only and pass under one glass lens held in
   the middle, so the selection moves with the scroll. Create / Save is plain glass
-  (`VividGlassButtonStyle` with no accent); the colour step's Confirm keeps the chosen colour.
+  (`DroppyGlassButtonStyle()`); the colour step's Confirm is tinted glass in the chosen colour. The
+  review of !41 asked for Droppy's own tinted glass on every coloured button (a solid fill under
+  the glass, `VividGlassButtonStyle`, was removed) and for "color" in every visible string.
 - **Start screen** (`StartScreen.swift`). With no projects the menu is `StartScreen` instead:
   `StartEmblem` (the logo with its long hand turning once every six seconds and glass pills of
-  earnings, `+$124` and so on, and one "By 8LX" in the logo's blue, orbiting it on a tilted ring,
+  earnings, `+$124` and so on, and one "By 8LX" tinted in the logo's blue, all `droppyGlassControlChrome` with no fill of our own, orbiting it on a tilted ring,
   behind and in front of it, on a `TimelineView`), "Welcome to Freelancy" (20pt), two lines
-  (13pt, 5pt line spacing, the primary text colour fading to 25% at both ends), and "Create
+  (13pt, 5pt line spacing, the secondary text colour; the review of !41 asked for no gradient), and "Create
   project" as a plain `DroppyGlassButtonStyle` button, which starts the project flow. The review
   of !41 asked for no effect on the button (an animated beam around it was removed) and for the
   logo to carry the welcome. `widgetHeight` gives the menu `startScreenHeight` (195) then.
 - **Colours on the shelf.** The shelf can be light (the island follows the appearance), so
   nothing on it is hard-coded white: text uses `AdaptiveColors.notchSurface*Text`, fills
   `notchSurfaceCardFill` (the tokens resolve in Droppy's own DroppyKit at run time). The only
-  whites left are the logo's own artwork on its opaque blue squircle, like the icon, and the
-  "By 8LX" text on its saturated blue pill.
+  whites left are the logo's own artwork on its opaque blue squircle, like the icon.
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
   it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) is three clean SVG
   layers made from it, because actool cannot draw the Figma export's `foreignObject` conic
@@ -331,7 +332,7 @@ https://getdroppy.app/droplet-developer-terms.
   (`.deleteProject`, `.deleteSession`, `.newSession`, `.switchProject`) and the widget shows
   `ConfirmScreen` in
   place of its screen, solo and paired (`compact`), at the same height. Cancel is plain glass;
-  Delete is red-tinted glass, Start / Create is `VividGlassButtonStyle` in the project colour. The
+  Delete is red-tinted glass, Start / Create is `DroppyGlassButtonStyle(fill: .tinted(...))` in the project colour. The
   new-session question says whether a running session will be paused (or keeps running when
   "Start new sessions running" is off). `confirmPending()` acts. After a new session,
   `freshSessionID` is set for 2.4 s and `SessionNameLine` shows "✓ Session N started" in the
@@ -352,7 +353,7 @@ https://getdroppy.app/droplet-developer-terms.
   session in Settings asks inline (`InlineDeleteConfirmation`: the question, Cancel, Delete) in
   place of the row's controls; a session row also hides its day and length while it asks. The HUD toggle is "Show a strip on start and pause".
 - **Session rename and naming.** The pencil on a session card calls `startRenamingSession`;
-  `.renameSession` shows `SessionRenameScreen` (same field, nav and "or Press ⏎" row as the
+  `.renameSession` shows `SessionRenameScreen` (same field, nav and "or press ⏎" row as the
   project flow, Save in the project colour), backed by `sessionRename`. "Name new sessions" (the
   `namesNewSessions` preference, default on) sends the plus to the same page first
   (`startNewSession` → `startNamingNewSession`, `sessionRename.sessionID` `nil`): the
