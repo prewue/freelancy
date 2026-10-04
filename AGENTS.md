@@ -243,7 +243,8 @@ https://getdroppy.app/droplet-developer-terms.
   Shift 10; a typed amount glides the ruler to it). `.currency` (`CurrencyStep`) has a search in
   the nav row (`NavSearch`: a 28pt glass disc that opens across the row in beats: the title fades
   out, the disc springs open on `DroppyAnimation.tabSelect` (the review of
-  !41 asked for a preset; it is the nearest to the 0.46 / 0.8 spring it replaced) with the magnifier riding from the middle to the leading edge (leading-aligned,
+  !41 asked for a preset; it is the nearest to the 0.46 / 0.8 spring it replaced; the fades are
+  `DroppyAnimation.hoverQuick` out and `DroppyAnimation.state` in, no curves of our own) with the magnifier riding from the middle to the leading edge (leading-aligned,
   centred in the disc by its padding), then 260 ms in a SwiftUI placeholder and the close
   button come in out of a blur over a left-aligned `FlowTextField`; closing runs backwards; it
   matches code, name and symbol; Return confirms, Escape closes) and shows its matches as a
