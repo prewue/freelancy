@@ -8,3 +8,6 @@ shots/
 # add a new test file with `git add -f`.
 Tests/
 Package.resolved
+# Jordy makes every droplet's icon for the Store; ours is the concept and the
+# local build's. droplet.json names it, his is saved under the same name.
+FreelanceTracker.icon/

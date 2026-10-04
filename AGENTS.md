@@ -265,6 +265,11 @@ https://getdroppy.app/droplet-developer-terms.
   nothing on it is hard-coded white: text uses `AdaptiveColors.notchSurface*Text`, fills
   `notchSurfaceCardFill` (the tokens resolve in Droppy's own DroppyKit at run time). The only
   whites left are the logo's own artwork on its opaque blue squircle, like the icon.
+- **Store icon policy.** Jordy makes every droplet's icon for the Store (CONTRIBUTING.md,
+  October 2026): a merge request that adds, changes or removes `<Name>.icon/` in anyone's commit
+  but his is refused. `.gitignore` lists `FreelanceTracker.icon/`, so `droppykit submit` leaves
+  it out; `droplet.json` still names it and his icon is saved under that name. Ours stays here
+  for the local build and as the concept described in the merge request's Icon concept section.
 - **Logo and icon.** The artwork was drawn in Figma (`app-logo.svg`, kept out of the package so
   it does not ship to the Store). The droplet icon (`FreelanceTracker.icon`) follows Droppy's
   icon language (review of !41): the `system-dark` tile, like Teleprompter and Thaw, with three
